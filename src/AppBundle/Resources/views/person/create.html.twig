@@ -1,0 +1,14 @@
+{% extends '@ancestors/base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+        {% if pToMarry is defined and pToMarry %}
+        <p>{% trans %}label.nav.create.partner{% endtrans %} {% trans %}label.generic.for{% endtrans %}: {{ pToMarry.fullName }}</p>
+        {% endif %}
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

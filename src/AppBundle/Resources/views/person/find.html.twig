@@ -1,0 +1,46 @@
+{% extends '@ancestors/base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+{{ form_start(form, {'attr': {'id': 'form_find_person'}}) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+{% if result|length > 0 %}
+        <table id="results">
+            <tr>
+                <th>{% trans %}label.generic.firstname{% endtrans %}</th>
+                <th>{% trans %}label.generic.familyname{% endtrans %}</th>
+                <th>{% trans %}label.generic.birthdate{% endtrans %}</th>
+                <th>{% trans %}label.generic.action{% endtrans %}</th>
+            </tr>
+            {% for person in result %}
+            <tr>
+                <td>{{ person.firstname }}</td>
+                <td>{{ person.familyname }}</td>
+                <td>{% if person.birthdate is not null %}{{ person.birthdate|date('d.m.Y') }}{% endif %}</td>
+                <td><a href="{{ path('show_person', { 'id': person.id} ) }}">{% trans %}label.person.show{% endtrans %}</a> <a href="{{ path('edit_person', { 'id': person.id} ) }}">{% trans %}label.person.edit{% endtrans %}</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+{% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+<script type="text/javascript">
+var delay = (function () {
+    var timer = 0;
+    return function (callback, ms) {
+        clearTimeout(timer);
+        timer = setTimeout(callback, ms);
+    };
+})();
+
+$("[id^={{ form.vars.id }}_]").on('keyup', function() {
+    delay(function() {
+        $("#form_find_person").submit();
+    }, 500);
+});
+</script>
+{% endblock %}

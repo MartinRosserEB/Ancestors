@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="label.nav.edit">
+                <source>label.nav.edit</source>
+                <target>Stammbaum bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="label.nav.create">
+                <source>label.nav.create</source>
+                <target>Person erfassen</target>
+            </trans-unit>
+            <trans-unit id="label.nav.create.partner">
+                <source>label.nav.create.partner</source>
+                <target>Partner/in erfassen</target>
+            </trans-unit>
+            <trans-unit id="label.nav.editPerson">
+                <source>label.nav.editPerson</source>
+                <target>Daten einer existierenden Person bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="label.nav.marry">
+                <source>label.nav.marry</source>
+                <target>Heirat erfassen</target>
+            </trans-unit>
+            <trans-unit id="label.nav.updateMarriage">
+                <source>label.nav.updateMarriage</source>
+                <target>Heirat bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="label.nav.show">
+                <source>label.nav.show</source>
+                <target>Stammbaum anzeigen</target>
+            </trans-unit>
+            <trans-unit id="label.nav.person.show">
+                <source>label.nav.person.show</source>
+                <target>Person anzeigen</target>
+            </trans-unit>
+            <trans-unit id="label.nav.person.find">
+                <source>label.nav.person.find</source>
+                <target>Person finden</target>
+            </trans-unit>
+            <trans-unit id="label.nav.person.link">
+                <source>label.nav.person.link</source>
+                <target>Verbindung zwischen zwei Personen anzeigen</target>
+            </trans-unit>
+            <trans-unit id="label.nav.browseFromFirst">
+                <source>label.nav.browseFromFirst</source>
+                <target>Älteste Person im Stammbaum anzeigen</target>
+            </trans-unit>
+            <trans-unit id="label.person.marry">
+                <source>label.person.marry</source>
+                <target>Heirat erfassen</target>
+            </trans-unit>
+            <trans-unit id="label.person.marriedTo">
+                <source>label.person.marriedTo</source>
+                <target>Verheiratet mit</target>
+            </trans-unit>
+            <trans-unit id="label.person.kid">
+                <source>label.person.kid</source>
+                <target>Kind</target>
+            </trans-unit>
+            <trans-unit id="label.generic.action">
+                <source>label.generic.action</source>
+                <target>Aktion</target>
+            </trans-unit>
+            <trans-unit id="label.generic.person">
+                <source>label.generic.person</source>
+                <target>Person</target>
+            </trans-unit>
+            <trans-unit id="label.generic.for">
+                <source>label.generic.for</source>
+                <target>für</target>
+            </trans-unit>
+            <trans-unit id="label.generic.twin">
+                <source>label.generic.twin</source>
+                <target>Zwilling</target>
+            </trans-unit>
+            <trans-unit id="label.generic.familyname">
+                <source>label.generic.familyname</source>
+                <target>Familienname</target>
+            </trans-unit>
+            <trans-unit id="label.generic.firstname">
+                <source>label.generic.firstname</source>
+                <target>Vorname</target>
+            </trans-unit>
+            <trans-unit id="label.generic.female">
+                <source>label.generic.female</source>
+                <target>Weiblich</target>
+            </trans-unit>
+            <trans-unit id="label.generic.birthdate">
+                <source>label.generic.birthdate</source>
+                <target>Geburtsdatum</target>
+            </trans-unit>
+            <trans-unit id="label.generic.deathdate">
+                <source>label.generic.deathdate</source>
+                <target>Todesdatum</target>
+            </trans-unit>
+            <trans-unit id="label.generic.mother">
+                <source>label.generic.mother</source>
+                <target>Mutter</target>
+            </trans-unit>
+            <trans-unit id="label.generic.husband">
+                <source>label.generic.husband</source>
+                <target>Ehemann</target>
+            </trans-unit>
+            <trans-unit id="label.generic.wife">
+                <source>label.generic.wife</source>
+                <target>Ehefrau</target>
+            </trans-unit>
+            <trans-unit id="label.generic.marriageDate">
+                <source>label.generic.marriageDate</source>
+                <target>Hochzeitsdatum</target>
+            </trans-unit>
+            <trans-unit id="label.generic.divorceDate">
+                <source>label.generic.divorceDate</source>
+                <target>Scheidungsdatum</target>
+            </trans-unit>
+            <trans-unit id="label.generic.father">
+                <source>label.generic.father</source>
+                <target>Vater</target>
+            </trans-unit>
+            <trans-unit id="label.generic.comment">
+                <source>label.generic.comment</source>
+                <target>Kommentar</target>
+            </trans-unit>
+            <trans-unit id="label.person.create">
+                <source>label.person.create</source>
+                <target>Daten speichern</target>
+            </trans-unit>
+            <trans-unit id="label.person.show">
+                <source>label.person.show</source>
+                <target>anzeigen</target>
+            </trans-unit>
+            <trans-unit id="label.person.findLink">
+                <source>label.person.findLink</source>
+                <target>Verbindung anzeigen lassen</target>
+            </trans-unit>
+            <trans-unit id="label.edit">
+                <source>label.edit</source>
+                <target>bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="label.marriage.delete">
+                <source>label.marriage.delete</source>
+                <target>löschen</target>
+            </trans-unit>
+            <trans-unit id="label.person.edit">
+                <source>label.person.edit</source>
+                <target>bearbeiten</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

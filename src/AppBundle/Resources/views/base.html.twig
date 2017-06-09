@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Vorfahren{% endblock %}</title>
+        {% block stylesheetsDefault %}
+          {% for sheet in ancestors_assets.default_css %}
+            <link rel="stylesheet" href="{{ asset(sheet) }}" />
+          {% endfor %}
+        {% endblock %}
+        {% block stylesheets %}{% endblock %}
+        {% block javascriptsHeadDefault %}
+          {% for script in ancestors_assets.default_head_js %}
+            <script src="{{ asset(script) }}"></script>
+          {% endfor %}
+        {% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        <nav class="menu-centered">
+            <ul class="dropdown menu" data-dropdown-menu data-close-on-click-inside="false">
+                <li>
+                    <a href="#">{% trans %}label.nav.edit{% endtrans %}</a>
+                    <ul class="menu">
+                        <li><a href="{{ path('create_person') }}">{% trans %}label.nav.create{% endtrans %}</a></li>
+                        <li><a href="{{ path('marry') }}">{% trans %}label.nav.marry{% endtrans %}</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">{% trans %}label.nav.show{% endtrans %}</a>
+                    <ul class="menu">
+                        <li><a href="{{ path('show_oldest_person') }}">{% trans %}label.nav.browseFromFirst{% endtrans %}</a></li>
+                        <li><a href="{{ path('find_person') }}">{% trans %}label.nav.person.find{% endtrans %}</a></li>
+                        <li><a href="{{ path('link_persons_form') }}">{% trans %}label.nav.person.link{% endtrans %}</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        {% block body %}{% endblock %}
+        {% block javascriptsBodyDefault %}
+          {% for script in ancestors_assets.default_body_js %}
+            <script src="{{ asset(script) }}"></script>
+          {% endfor %}
+        {% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

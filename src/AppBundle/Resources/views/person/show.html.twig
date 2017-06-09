@@ -1,0 +1,42 @@
+{% extends '@ancestors/base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+            <h1>{{ person.getFullName() }}</h1><p><a href="{{ path('edit_person', { 'id': person.id} ) }}">{% trans %}label.person.edit{% endtrans %}</a></p>
+                <table>
+                    {% if person.father is not null %}<tr>
+                        <td>{% trans %}label.generic.father{% endtrans %}:</td>
+                        <td><a href="{{ path("show_person", {'id': person.getFather().getId()}) }}">{{ person.getFather().getFullName() }}</a></td>
+                    </tr>
+                    {% endif %}{% if person.mother is not null %}<tr>
+                        <td>{% trans %}label.generic.mother{% endtrans %}:</td>
+                        <td><a href="{{ path("show_person", {'id': person.getMother().getId()}) }}">{{ person.getMother().getFullName() }}</a></td>
+                    </tr>
+                    {% endif %}<tr>
+                        <td><a href="{{ path("marry_with", {'p1': person.id}) }}">{% trans %}label.person.marry{% endtrans %}</a></td>
+                        <td></td>
+                    </tr>{% if marriedTo is not null %}{% for marriedPerson in marriedTo %}<tr>
+                                <td>{% trans %}label.person.marriedTo{% endtrans %} (<a href="{{ path("edit_marriage", {'p1': person.id, 'p2': marriedPerson.id}) }}">{% trans %}label.edit{% endtrans %}</a> / <a href="{{ path("delete_marriage", {'p1': person.id, 'p2': marriedPerson.id}) }}">{% trans %}label.marriage.delete{% endtrans %}</a>):</td>
+                        <td><a href="{{ path("show_person", {'id': marriedPerson.getId()}) }}">{{ marriedPerson.getFullName() }}</a></td>
+                    </tr>
+                    {% endfor %}{% endif %}{% if kids is not null %}{% for kid in kids %}<tr>
+                        <td>{% trans %}label.person.kid{% endtrans %}:</td>
+                        <td><a href="{{ path("show_person", {'id': kid.getId()}) }}">{{ kid.getFullName() }}</a></td>
+                    </tr>
+                    {% endfor %}{% endif %}{% if marriedTo is not null %}{% for marriedPerson in marriedTo %}<tr>
+                        <td><a href="{{ path("create_person_from_parents", {"p1": person.getId(), "p2": marriedPerson.getId()}) }}">+ ({{ marriedPerson.getFullName() }})</a></td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}{% endif %}{% if person.birthdate is not null %}<tr>
+                        <td>{% trans %}label.generic.birthdate{% endtrans %}:</td>
+                        <td>{{ person.birthdate|date('d.m.Y') }}</td>
+                    </tr>
+                    {% endif %}{% if person.deathdate is not null %}<tr>
+                        <td>{% trans %}label.generic.deathdate{% endtrans %}:</td>
+                        <td>{{ person.deathdate|date('d.m.Y') }}</td>
+                    </tr>{% endif %}
+                </table>
+        </div>
+    </div>
+{% endblock %}

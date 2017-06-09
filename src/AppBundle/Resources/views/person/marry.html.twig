@@ -1,0 +1,14 @@
+{% extends '@ancestors/base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+        {% if nextActionMarryBoth %}
+            <a href="{{ path('create_person', {'pToMarry': person.id}) }}">{% trans %}label.nav.create.partner{% endtrans %}</a><br>
+        {% endif %}
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

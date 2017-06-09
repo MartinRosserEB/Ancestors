@@ -1,0 +1,11 @@
+{% extends '@ancestors/base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+{{ form_start(form, {'attr': {'id': 'form_find_person'}}) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
