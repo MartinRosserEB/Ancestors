@@ -21,13 +21,17 @@
     <body>
         <nav class="menu-centered">
             <ul class="dropdown menu" data-dropdown-menu data-close-on-click-inside="false">
+                {% if is_granted('ROLE_CREATE') %}
                 <li>
                     <a href="#">{% trans %}label.nav.edit{% endtrans %}</a>
                     <ul class="menu">
                         <li><a href="{{ path('create_person') }}">{% trans %}label.nav.create{% endtrans %}</a></li>
+                        {% if is_granted('ROLE_EDIT') %}
                         <li><a href="{{ path('marry') }}">{% trans %}label.nav.marry{% endtrans %}</a></li>
+                        {% endif %}
                     </ul>
                 </li>
+                {% endif %}
                 <li>
                     <a href="#">{% trans %}label.nav.show{% endtrans %}</a>
                     <ul class="menu">

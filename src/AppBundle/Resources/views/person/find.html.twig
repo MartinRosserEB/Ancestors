@@ -3,23 +3,25 @@
 {% block body %}
     <div id="wrapper">
         <div id="container">
+            <div class="row">
 {{ form_start(form, {'attr': {'id': 'form_find_person'}}) }}
 {{ form_widget(form) }}
 {{ form_end(form) }}
+            </div>
 {% if result|length > 0 %}
-        <div id="results" class="row customTableHeader">
-            <div class="small-4 large-4 columns">{% trans %}label.generic.firstname{% endtrans %}</div>
-            <div class="small-4 large-4 columns">{% trans %}label.generic.familyname{% endtrans %}</div>
-            <div class="small-4 large-4 columns">{% trans %}label.generic.birthdate{% endtrans %}</div>
-        </div>
+            <div id="results" class="row customTableHeader">
+                <div class="small-4 large-4 columns">{% trans %}label.generic.firstname{% endtrans %}</div>
+                <div class="small-4 large-4 columns">{% trans %}label.generic.familyname{% endtrans %}</div>
+                <div class="small-4 large-4 columns">{% trans %}label.generic.birthdate{% endtrans %}</div>
+            </div>
             {% for person in result %}
-        <div class="row customTableRow">
-            <a href="{{ path('show_person', { 'id': person.id} ) }}">
-                <div class="small-4 large-4 columns">{{ person.firstname }}</div>
-                <div class="small-4 large-4 columns">{{ person.familyname }}</div>
-                <div class="small-4 large-4 columns">{% if person.birthdate is not null %}{{ person.birthdate|date('d.m.Y') }}{% endif %}</div>
-            </a>
-        </div>
+            <div class="row customTableRow">
+                <a href="{{ path('show_person', { 'id': person.id} ) }}">
+                    <div class="small-4 large-4 columns">{{ person.firstname }}</div>
+                    <div class="small-4 large-4 columns">{{ person.familyname }}</div>
+                    <div class="small-4 large-4 columns">{% if person.birthdate is not null %}{{ person.birthdate|date('d.m.Y') }}{% endif %}</div>
+                </a>
+            </div>
             {% endfor %}
 {% endif %}
         </div>
