@@ -38,20 +38,3 @@
 }
 </style>
 {% endblock %}
-{% block javascripts %}
-<script type="text/javascript">
-var delay = (function () {
-    var timer = 0;
-    return function (callback, ms) {
-        clearTimeout(timer);
-        timer = setTimeout(callback, ms);
-    };
-})();
-
-$("[id^={{ form.vars.id }}_]").on('keyup', function() {
-    delay(function() {
-        $("#form_find_person").submit();
-    }, 500);
-});
-</script>
-{% endblock %}
