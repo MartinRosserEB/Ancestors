@@ -90,7 +90,10 @@ class PersonType extends AbstractType
                 'required' => false,
             ))
             ->add('save', SubmitType::class, array(
-                'label' => 'label.person.create'
+                'label' => 'label.person.create',
+                'attr' => array(
+                    'class' => 'button',
+                ),
             ))
         ;
     }

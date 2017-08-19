@@ -64,7 +64,10 @@ class PersonMarryPersonType extends AbstractType
                 'required' => false,
             ))
             ->add('save', SubmitType::class, array(
-                'label' => 'label.person.marry'
+                'label' => 'label.person.marry',
+                'attr' => array(
+                    'class' => 'button',
+                ),
             ))
         ;
     }

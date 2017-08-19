@@ -39,7 +39,10 @@ class FindPersonType extends AbstractType
                 'required' => false,
             ))
             ->add('save', SubmitType::class, array(
-                'label' => 'label.nav.person.find'
+                'label' => 'label.nav.person.find',
+                'attr' => array(
+                    'class' => 'button',
+                ),
             ))
         ;
     }

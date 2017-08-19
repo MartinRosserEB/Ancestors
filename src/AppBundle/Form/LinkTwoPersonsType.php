@@ -33,7 +33,10 @@ class LinkTwoPersonsType extends AbstractType
                 }
             ))
             ->add('save', SubmitType::class, array(
-                'label' => 'label.person.findLink'
+                'label' => 'label.person.findLink',
+                'attr' => array(
+                    'class' => 'button',
+                ),
             ))
         ;
     }

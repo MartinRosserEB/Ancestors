@@ -35,18 +35,22 @@ p {
 </style>
     <div id="wrapper">
         <div id="container">
-            <div class="row text-center">
+            <div class="expanded row text-center">
                 <div id="treeGraph"></div>
             </div>
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
 <script type="text/javascript">
 data = {{ data|raw }};
+
+myContainerMaxWidth = $("#treeGraph").width();
 
 options = {
   target: '#treeGraph',
   debug: true,
-  width: 800,
+  width: myContainerMaxWidth,
   height: 1000,
   callbacks: {
     /*
@@ -60,7 +64,7 @@ options = {
     bottom: 0,
     left: 0
   },
-  nodeWidth: 100,
+  nodeWidth: myContainerMaxWidth/5,
   styles: {
     node: 'node',
     linage: 'linage',
