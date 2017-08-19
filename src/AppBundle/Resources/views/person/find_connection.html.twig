@@ -1,8 +1,8 @@
 {% extends '@ancestors/base.html.twig' %}
 {% block body %}
-<script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://cdn.rawgit.com/ErikGartner/dTree/master/dist/dTree.min.js"></script>
+<script src="{{ asset('js/d3/lodash.min.js') }}"></script>
+<script src="{{ asset('js/d3/d3.v4.min.js') }}"></script>
+<script src="{{ asset('js/d3/dTree.min.js') }}"></script>
 <style>
 svg {
   font: 10px sans-serif;
@@ -35,10 +35,9 @@ p {
 </style>
     <div id="wrapper">
         <div id="container">
-            <div class="row">
-                <div class="centered columns" style="height:1000px;">
-                    <div id="treeGraph"></div>
-                </div>
+            <div class="row text-center">
+                <div id="treeGraph"></div>
+            </div>
         </div>
     </div>
 <script type="text/javascript">
