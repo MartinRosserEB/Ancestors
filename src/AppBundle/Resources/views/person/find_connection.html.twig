@@ -46,12 +46,13 @@ p {
 data = {{ data|raw }};
 
 myContainerMaxWidth = $("#treeGraph").width();
+myContainerMaxHeight = $(window).height() - $("nav").height() - 2 * 15;
 
 options = {
   target: '#treeGraph',
   debug: true,
   width: myContainerMaxWidth,
-  height: 1000,
+  height: myContainerMaxHeight,
   callbacks: {
     /*
       Callbacks should only be overwritten on a need to basis.
