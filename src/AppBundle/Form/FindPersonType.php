@@ -25,12 +25,12 @@ class FindPersonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstname', TextType::class, array(
-                'label' => 'label.generic.firstname',
-                'required' => false,
-            ))
             ->add('familyname', TextType::class, array(
                 'label' => 'label.generic.familyname',
+                'required' => false,
+            ))
+            ->add('firstname', TextType::class, array(
+                'label' => 'label.generic.firstname',
                 'required' => false,
             ))
             ->add('birthdate', DateType::class, array(
