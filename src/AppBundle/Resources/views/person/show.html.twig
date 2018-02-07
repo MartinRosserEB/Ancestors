@@ -28,21 +28,21 @@
                 <a href="{{ path("marry_with", {'p1': person.id}) }}">{% trans %}label.person.marry{% endtrans %}</a>
             </div>
             {% endif %}
-            {% if marriedTo is not null %}{% for marriedPerson in marriedTo %}
+            {% if marriagesWithKids is not null %}{% for marriageWithKids in marriagesWithKids %}
             <div class="row">
-                <div class="small-3 large-2 columns">{% trans %}label.person.marriedTo{% endtrans %}{% if is_granted('ROLE_EDIT') %} (<a href="{{ path("edit_marriage", {'p1': person.id, 'p2': marriedPerson.id}) }}">{% trans %}label.edit{% endtrans %}</a> / <a href="{{ path("delete_marriage", {'p1': person.id, 'p2': marriedPerson.id}) }}">{% trans %}label.marriage.delete{% endtrans %}</a>){% endif %}:</div>
-                <div class="small-9 large-10 columns"><a href="{{ path("show_person", {'id': marriedPerson.getId()}) }}">{{ marriedPerson.getFullName() }}</a></div>
+                <div class="small-3 large-2 columns">{% trans %}label.person.marriedTo{% endtrans %}{% if is_granted('ROLE_EDIT') %} (<a href="{{ path("edit_marriage", {'p1': person.id, 'p2': marriageWithKids.person.id}) }}">{% trans %}label.edit{% endtrans %}</a> / <a href="{{ path("delete_marriage", {'p1': person.id, 'p2': marriageWithKids.person.id}) }}">{% trans %}label.marriage.delete{% endtrans %}</a>){% endif %}:</div>
+                <div class="small-9 large-10 columns"><a href="{{ path("show_person", {'id': marriageWithKids.person.id }) }}">{{ marriageWithKids.person.getFullName() }}</a></div>
+                {% for kid in marriageWithKids.kids -%}
+                    {% if loop.index == 1 -%}</div><div class="row"><div class="small-3 large-2 columns">{% trans %}label.person.kid{% endtrans %}:</div>
+                    {%- else -%}</div><div class="row"><div class="small-3 large-2 columns"></div>
+                    {% endif %}<div class="small-9 large-10 columns"><a href="{{ path("show_person", {'id': kid.id }) }}">{{ kid.getFullName() }}</a></div>
+                {%- endfor %}
+                </div>
             </div>
             {% endfor %}{% endif %}
-            {% if kids is not null %}{% for kid in kids %}
+            {% if marriagesWithKids is not null and is_granted('ROLE_EDIT') %}{% for marriage in marriagesWithKids %}
             <div class="row">
-                <div class="small-3 large-2 columns">{% trans %}label.person.kid{% endtrans %}:</div>
-                <div class="small-9 large-10 columns"><a href="{{ path("show_person", {'id': kid.getId()}) }}">{{ kid.getFullName() }}</a></div>
-            </div>
-            {% endfor %}{% endif %}
-            {% if marriedTo is not null and is_granted('ROLE_EDIT') %}{% for marriedPerson in marriedTo %}
-            <div class="row">
-                <a href="{{ path("create_person_from_parents", {"p1": person.getId(), "p2": marriedPerson.getId()}) }}">+ ({{ marriedPerson.getFullName() }})</a>
+                <a href="{{ path("create_person_from_parents", {"p1": person.getId(), "p2": marriage.person.getId()}) }}">+ ({{ marriage.person.getFullName() }})</a>
             </div>
             {% endfor %}{% endif %}
             {% if person.birthdate is not null %}
@@ -55,6 +55,12 @@
             <div class="row">
                 <div class="small-3 large-2 columns">{% trans %}label.generic.deathdate{% endtrans %}:</div>
                 <div class="small-9 large-10 columns">{{ person.deathdate|date('d.m.Y') }}</div>
+            </div>
+            {% endif %}
+            {% if person.comment is not null %}
+            <div class="row">
+                <div class="small-3 large-2 columns">{% trans %}label.generic.comment{% endtrans %}:</div>
+                <div class="small-9 large-10 columns">{{ person.comment }}</div>
             </div>
             {% endif %}
         </div>

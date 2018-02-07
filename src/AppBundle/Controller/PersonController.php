@@ -30,22 +30,13 @@ class PersonController extends Controller
     /**
      * @Route("/{id}/show/", name="show_person")
      */
-    public function showAction($id)
+    public function showAction(Person $person)
     {
-        $em = $this->getDoctrine()->getManager();
-        $person = $em->getRepository('AppBundle:Person')->findOneById($id);
-
-        if ($person) {
-            $personsMarriedTo = $this->getPersonsMarriedTo($person);
-            $kids = $this->getKids($person);
-            return $this->render('@ancestors/person/show.html.twig', array(
-                'person' => $person,
-                'marriedTo' => $personsMarriedTo,
-                'kids' => $kids,
-            ));
-        } else {
-            throw new AccessDeniedHttpException();
-        }
+        $marriagesWithKids = $this->getMarriagesWithKidsFor($person);dump($marriagesWithKids );
+        return $this->render('@ancestors/person/show.html.twig', array(
+            'person' => $person,
+            'marriagesWithKids' => $marriagesWithKids,
+        ));
     }
 
     /**
@@ -126,6 +117,38 @@ class PersonController extends Controller
         } else {
             throw new AccessDeniedHttpException();
         }
+    }
+
+    private function getMarriagesWithKidsFor(Person $person)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $marriagesWithKids = [];
+        if ($person->getFemale()) {
+            $marriedTo = $em->getRepository('AppBundle:PersonMarryPerson')->findByWife($person->getId());
+            if ($marriedTo) {
+                foreach ($marriedTo as $marriedPerson) {
+                    $husband = $marriedPerson->getHusband();
+                    $marriagesWithKids[] = array(
+                        'person' => $husband,
+                        'kids' => $em->getRepository('AppBundle:Person')->findKidsByMotherAndFather($person, $husband),
+                    );
+                }
+            }
+        } else {
+            $marriedTo = $em->getRepository('AppBundle:PersonMarryPerson')->findByHusband($person->getId());
+            if ($marriedTo) {
+                foreach ($marriedTo as $marriedPerson) {
+                    $wife = $marriedPerson->getWife();
+                    $marriagesWithKids[] = array(
+                        'person' => $wife,
+                        'kids' => $em->getRepository('AppBundle:Person')->findKidsByMotherAndFather($wife, $person),
+                    );
+                }
+            }
+        }
+
+        return $marriagesWithKids;
     }
 
     private function getPersonsMarriedTo($person)
