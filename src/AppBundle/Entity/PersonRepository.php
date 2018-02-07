@@ -14,7 +14,7 @@ class PersonRepository extends EntityRepository
             ->orderBy('p.birthdate', 'ASC')
             ->setParameter('father', $father)
             ->setParameter('mother', $mother);
-dump($qb->getQuery()    , $qb, $qb->getQuery()->getResult());
+
         return $qb->getQuery()->getResult();
     }
 }

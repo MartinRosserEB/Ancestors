@@ -32,7 +32,7 @@ class PersonController extends Controller
      */
     public function showAction(Person $person)
     {
-        $marriagesWithKids = $this->getMarriagesWithKidsFor($person);dump($marriagesWithKids );
+        $marriagesWithKids = $this->getMarriagesWithKidsFor($person);
         return $this->render('@ancestors/person/show.html.twig', array(
             'person' => $person,
             'marriagesWithKids' => $marriagesWithKids,
