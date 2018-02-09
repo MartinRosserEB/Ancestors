@@ -6,15 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Vorfahren{% endblock %}</title>
         {% block stylesheetsDefault %}
-          {% for sheet in ancestors_assets.default_css %}
-            <link rel="stylesheet" href="{{ asset(sheet) }}" />
-          {% endfor %}
+        <link rel="stylesheet" href="{{ asset('assets/app.css') }}" />
         {% endblock %}
         {% block stylesheets %}{% endblock %}
         {% block javascriptsHeadDefault %}
-          {% for script in ancestors_assets.default_head_js %}
-            <script src="{{ asset(script) }}"></script>
-          {% endfor %}
+        <script src="{{ asset('assets/app.js') }}"></script>
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
@@ -44,9 +40,6 @@
         </nav>
         {% block body %}{% endblock %}
         {% block javascriptsBodyDefault %}
-          {% for script in ancestors_assets.default_body_js %}
-            <script src="{{ asset(script) }}"></script>
-          {% endfor %}
         {% endblock %}
         {% block javascripts %}{% endblock %}
     </body>
