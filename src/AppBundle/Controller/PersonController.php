@@ -11,7 +11,9 @@ use AppBundle\Form\PersonType;
 use AppBundle\Form\FindPersonType;
 use AppBundle\Form\LinkTwoPersonsType;
 use AppBundle\Form\PersonMarryPersonType;
-use AppBundle\Helper\DisplayNode;
+use AppBundle\Service\FindLink;
+use AppBundle\Service\PreFill;
+use AppBundle\Service\PrepareRelations;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -30,9 +32,9 @@ class PersonController extends Controller
     /**
      * @Route("/{id}/show/", name="show_person")
      */
-    public function showAction(Person $person)
+    public function showAction(Person $person, PrepareRelations $prepareRelations)
     {
-        $marriagesWithKids = $this->getMarriagesWithKidsFor($person);
+        $marriagesWithKids = $prepareRelations->getMarriagesWithKidsFor($person);
 
         return $this->render('@ancestors/person/show.html.twig', array(
             'person' => $person,
@@ -80,100 +82,28 @@ class PersonController extends Controller
     /**
      * @Route("/show/tree", name="show_family_tree")
      */
-    public function showTreeAction()
+    public function showTreeAction(PrepareRelations $prepareRelations)
     {
         $em = $this->getDoctrine()->getManager();
         $persons = $em->getRepository('AppBundle:Person')->findAll();
 
         if ($person) {
-            $personsMarriedTo = $this->getPersonsMarriedTo($person);
-            $kids = $this->getKids($person);
             return $this->render('@ancestors/person/show.html.twig', array(
                 'person' => $person,
-                'marriedTo' => $personsMarriedTo,
-                'kids' => $kids,
+                'marriedTo' => $prepareRelations->getPersonsMarriedTo($person),
+                'kids' => $prepareRelations->getKids($person),
             ));
         } else {
             throw new AccessDeniedHttpException();
         }
     }
 
-    private function getMarriagesWithKidsFor(Person $person)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $marriagesWithKids = [];
-        if ($person->getFemale()) {
-            $marriedTo = $em->getRepository('AppBundle:PersonMarryPerson')->findByWife($person->getId());
-            if ($marriedTo) {
-                foreach ($marriedTo as $marriedPerson) {
-                    $husband = $marriedPerson->getHusband();
-                    $marriagesWithKids[] = array(
-                        'person' => $husband,
-                        'kids' => $em->getRepository('AppBundle:Person')->findKidsByMotherAndFather($person, $husband),
-                    );
-                }
-            }
-        } else {
-            $marriedTo = $em->getRepository('AppBundle:PersonMarryPerson')->findByHusband($person->getId());
-            if ($marriedTo) {
-                foreach ($marriedTo as $marriedPerson) {
-                    $wife = $marriedPerson->getWife();
-                    $marriagesWithKids[] = array(
-                        'person' => $wife,
-                        'kids' => $em->getRepository('AppBundle:Person')->findKidsByMotherAndFather($wife, $person),
-                    );
-                }
-            }
-        }
-
-        return $marriagesWithKids;
-    }
-
-    private function getPersonsMarriedTo($person)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $personsMarriedTo = [];
-        if ($person->getFemale()) {
-            $marriedTo = $em->getRepository('AppBundle:PersonMarryPerson')->findByWife($person->getId());
-            if ($marriedTo) {
-                foreach ($marriedTo as $marriedPerson) {
-                    $personsMarriedTo[] = $marriedPerson->getHusband();
-                }
-            }
-        } else {
-            $marriedTo = $em->getRepository('AppBundle:PersonMarryPerson')->findByHusband($person->getId());
-            if ($marriedTo) {
-                foreach ($marriedTo as $marriedPerson) {
-                    $personsMarriedTo[] = $marriedPerson->getWife();
-                }
-            }
-        }
-
-        return $personsMarriedTo;
-    }
-
-    private function getKids($person)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $kids = [];
-        if ($person->getFemale()) {
-            $kids = $em->getRepository('AppBundle:Person')->findByMother($person->getId());
-        } else {
-            $kids = $em->getRepository('AppBundle:Person')->findByFather($person->getId());
-        }
-
-        return $kids;
-    }
-
     /**
-     * @Route("/link/{p1}/{p2}", name="link_persons")
+     * @Route("/link/{person1}/{person2}", name="link_persons")
      */
-    public function link($p1, $p2)
+    public function link(Person $person1, Person $person2, FindLink $linkFinder)
     {
-        $curNode = $this->get('person_link_finder')->getLinkBetweenTwoPersons($p1, $p2);
+        $curNode = $linkFinder->getLinkBetweenTwoPersons($person1, $person2);
         if (!$curNode) {
             throw $this->createNotFoundException('label.link.between.persons.not.found');
         }
@@ -206,8 +136,8 @@ class PersonController extends Controller
                 throw $this->createNotFoundException('label.persons.not.found');
             }
             return $this->redirectToRoute('link_persons', array(
-                'p1' => $person1->getId(),
-                'p2' => $person2->getId(),
+                'person1' => $person1->getId(),
+                'person2' => $person2->getId(),
             ));
         }
 
@@ -261,23 +191,11 @@ class PersonController extends Controller
     }
 
     /**
-     * @Route("/createFrom/{p1}/{p2}", name="create_person_from_parents")
+     * @Route("/createFrom/{person1}/{person2}", name="create_person_from_parents")
      */
-    public function createFromParentsAction(Request $request, Person $p1, Person $p2)
+    public function createFromParentsAction(Request $request, Person $person1, Person $person2, PreFill $preFill)
     {
-        $entity = new Person;
-        if (!$person1 || !$person2) {
-            throw $this->createNotFoundException('label.parents.not.found');
-        }
-        if ($person1->getFemale() && !$person2->getFemale()) {
-            $entity->setMother($person1);
-            $entity->setFather($person2);
-            $entity->setFamilyname($person2->getFamilyname());
-        } else if (!$person1->getFemale() && $person2->getFemale()) {
-            $entity->setMother($person2);
-            $entity->setFather($person1);
-            $entity->setFamilyname($person1->getFamilyname());
-        }
+        $entity = $preFill->returnPreFilledPerson($person1, $person2);
 
         $form = $this->createForm(PersonType::class, $entity, array(
             'action' => $this->generateUrl('create_person'),
@@ -289,7 +207,7 @@ class PersonController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
-            return $this->redirect($this->generateUrl('create_person_from_parents', array('p1' => $person1->getId(), 'p2' => $person2->getId())));
+            return $this->redirect($this->generateUrl('create_person_from_parents', array('person1' => $person1->getId(), 'person2' => $person2->getId())));
         }
 
         return $this->render('@ancestors/person/create.html.twig', array(
@@ -347,23 +265,11 @@ class PersonController extends Controller
     }
 
     /**
-     * @Route("/marryWith/{p1}", name="marry_with")
+     * @Route("/marryWith/{person}", name="marry_with")
      */
-    public function marryWithAction(Request $request, $p1)
+    public function marryWithAction(Request $request, Person $person, PreFill $preFill)
     {
-        $entity = new PersonMarryPerson;
-
-        $em = $this->getDoctrine()->getManager();
-        $person = $em->getRepository('AppBundle:Person')->findOneById($p1);
-        if ($person) {
-            if ($person->getFemale()) {
-                $entity->setWife($person);
-            } else {
-                $entity->setHusband($person);
-            }
-        } else {
-            // Should do error handling
-        }
+        $entity = $preFill->setWifeOrHusband($person);
 
         $form = $this->createForm(PersonMarryPersonType::class, $entity, array(
             'action' => $this->generateUrl('marry'),
@@ -372,6 +278,7 @@ class PersonController extends Controller
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
             return $this->redirect($this->generateUrl('show_person', array('id' => $entity->getHusband()->getId())));
@@ -385,24 +292,11 @@ class PersonController extends Controller
     }
 
     /**
-     * @Route("/marryBoth/{p1}/{p2}", name="marry_both")
+     * @Route("/marryBoth/{person1}/{person2}", name="marry_both")
      */
-    public function marryBothAction(Request $request, $p1, $p2)
+    public function marryBothAction(Request $request, $person1, $person2, PreFill $preFill)
     {
-        $entity = new PersonMarryPerson;
-
-        $em = $this->getDoctrine()->getManager();
-        $person1 = $em->getRepository('AppBundle:Person')->findOneById($p1);
-        $person2 = $em->getRepository('AppBundle:Person')->findOneById($p2);
-        if ($person1 && $person2) {
-            if ($person1->getFemale() && !$person2->getFemale()) {
-                $entity->setWife($person1);
-                $entity->setHusband($person2);
-            } elseif ($person2->getFemale() && !$person1->getFemale()) {
-                $entity->setWife($person2);
-                $entity->setHusband($person1);
-            }
-        }
+        $entity = $preFill->setWifeAndHusband($person1, $person2);
 
         $form = $this->createForm(PersonMarryPersonType::class, $entity, array(
             'action' => $this->generateUrl('marry'),
@@ -423,22 +317,20 @@ class PersonController extends Controller
     }
 
     /**
-     * @Route("/editMarriage/{p1}/{p2}", name="edit_marriage")
+     * @Route("/editMarriage/{person1}/{person2}", name="edit_marriage")
      */
     public function editMarriageAction(Request $request, Person $person1, Person $person2)
     {
-        $em = $this->getDoctrine()->getManager();
-        if ($person1 && $person2) {
-            $entity = $em->getRepository('AppBundle:PersonMarryPerson')
-                ->findMarriageBetween($person1, $person2);
-        } else {
+        $entity = $em->getRepository('AppBundle:PersonMarryPerson')
+            ->findMarriageBetween($person1, $person2);
+        if (!$entity) {
             throw $this->createNotFoundException('label.marriage.not.found');
         }
 
         $form = $this->createForm(PersonMarryPersonType::class, $entity, array(
             'action' => $this->generateUrl('edit_marriage', array(
-                'p1' => $person1->getId(),
-                'p2' => $person2->getId(),
+                'person1' => $person1->getId(),
+                'person2' => $person2->getId(),
             )),
             'method' => 'POST',
         ));
@@ -465,14 +357,14 @@ class PersonController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        if ($person1 && $person2) {
-            $entity = $em->getRepository('AppBundle:PersonMarryPerson')
-                ->findMarriageBetween($person1, $person2);
+        $entity = $em->getRepository('AppBundle:PersonMarryPerson')
+            ->findMarriageBetween($person1, $person2);
+        if ($entity) {
             $em->remove($entity);
             $em->flush();
 
             return $this->redirect($this->generateUrl('show_person', array(
-                'id' => $p1,
+                'id' => $person1->getId(),
             )));
         } else {
             throw $this->createNotFoundException('label.marriage.not.found');

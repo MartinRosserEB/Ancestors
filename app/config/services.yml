@@ -4,6 +4,10 @@ parameters:
 #    parameter_name: value
 
 services:
-    person_link_finder:
-        class: AppBundle\Service\FindLink
-        arguments: ["@doctrine.orm.entity_manager"]
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    AppBundle\:
+        resource: '../../src/AppBundle/*'

@@ -2,25 +2,23 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Person;
 use AppBundle\Helper\DisplayNode;
+use Doctrine\Common\Persistence\ObjectManager;
 
 /**
- * Description of FindLink
- *
  * @author mrosser
  */
 class FindLink {
     private $em;
 
-    public function __construct ($em)
+    public function __construct (ObjectManager $em)
     {
         $this->em = $em;
     }
 
-    public function getLinkBetweenTwoPersons($p1ID, $p2ID)
+    public function getLinkBetweenTwoPersons(Person $person1, Person $person2)
     {
-        $person1 = $this->em->getRepository('AppBundle:Person')->findOneById($p1ID);
-        $person2 = $this->em->getRepository('AppBundle:Person')->findOneById($p2ID);
         if (!$person1 || !$person2) {
             return false;
         }
