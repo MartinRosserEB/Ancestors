@@ -33,6 +33,7 @@ class PersonController extends Controller
     public function showAction(Person $person)
     {
         $marriagesWithKids = $this->getMarriagesWithKidsFor($person);
+
         return $this->render('@ancestors/person/show.html.twig', array(
             'person' => $person,
             'marriagesWithKids' => $marriagesWithKids,
@@ -44,17 +45,10 @@ class PersonController extends Controller
      */
     public function showOldestAction()
     {
-        $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Person');
-        $qb = $repo->createQueryBuilder('p');
-        $persons = $qb->select('p')
-            ->where('p.birthdate is not null')
-            ->orderBy('p.birthdate', 'ASC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getResult();
+        $oldestPerson = $this->getDoctrine()->getManager()->getRepository('AppBundle:Person')->findOldestPerson();
 
-        if ($persons[0] && $persons[0]->getId()) {
-            return $this->redirectToRoute('show_person', array('id' => $persons[0]->getId()));
+        if ($oldestPerson) {
+            return $this->redirectToRoute('show_person', array('id' => $oldestPerson->getId()));
         } else {
             throw new AccessDeniedHttpException();
         }
@@ -63,11 +57,8 @@ class PersonController extends Controller
     /**
      * @Route("/{id}/edit/", name="edit_person")
      */
-    public function editAction(Request $request, $id)
+    public function editAction(Request $request, Person $person)
     {
-        $em = $this->getDoctrine()->getManager();
-        $person = $em->getRepository('AppBundle:Person')->findOneById($id);
-
         $form = $this->createForm(PersonType::class, $person, array(
             'action' => $this->generateUrl('edit_person', array('id' => $person->getId())),
             'method' => 'POST',
@@ -84,18 +75,6 @@ class PersonController extends Controller
         return $this->render('@ancestors/person/create.html.twig', array(
             'form' => $form->createView(),
         ));
-
-        if ($person) {
-            $personsMarriedTo = $this->getPersonsMarriedTo($person);
-            $kids = $this->getKids($person);
-            return $this->render('@ancestors/person/show.html.twig', array(
-                'person' => $person,
-                'marriedTo' => $personsMarriedTo,
-                'kids' => $kids,
-            ));
-        } else {
-            throw new AccessDeniedHttpException();
-        }
     }
 
     /**
@@ -196,7 +175,7 @@ class PersonController extends Controller
     {
         $curNode = $this->get('person_link_finder')->getLinkBetweenTwoPersons($p1, $p2);
         if (!$curNode) {
-            trigger_error('Could not find linke between persons!');
+            throw $this->createNotFoundException('label.link.between.persons.not.found');
         }
         $curNode->recursivelySetSpouse($this->getDoctrine()->getManager());
         $curNode->removeSpouseFromLastChild();
@@ -224,7 +203,7 @@ class PersonController extends Controller
             $person1 = $em->getRepository('AppBundle:Person')->findOneById($entity->getHusband());
             $person2 = $em->getRepository('AppBundle:Person')->findOneById($entity->getWife());
             if (!$person1 || !$person2) {
-                trigger_error('Could not find both persons in database!');
+                throw $this->createNotFoundException('label.persons.not.found');
             }
             return $this->redirectToRoute('link_persons', array(
                 'p1' => $person1->getId(),
@@ -238,24 +217,19 @@ class PersonController extends Controller
     }
 
     /**
-     * @Route("/create/{pToMarry}", defaults = {"pToMarry" = null}, name="create_person")
+     * @Route("/create/{personToMarry}", defaults = {"personToMarry" = null}, name="create_person")
      */
-    public function createAction(Request $request, $pToMarry)
+    public function createAction(Request $request, Person $personToMarry)
     {
         $entity = new Person;
 
         $em = $this->getDoctrine()->getManager();
 
         $actionUrl = $this->generateUrl('create_person');
-        if ($pToMarry) {
-            $personToMarry = $em->getRepository('AppBundle:Person')->findOneById($pToMarry);
-            if ($personToMarry) {
-                $actionUrl = $this->generateUrl('create_person', array(
-                    'pToMarry' => $personToMarry->getId(),
-                ));
-            } else {
-                // Should fail with error message that person was not found
-            }
+        if ($personToMarry) {
+            $actionUrl = $this->generateUrl('create_person', array(
+                'pToMarry' => $personToMarry->getId(),
+            ));
         }
 
         $form = $this->createForm(PersonType::class, $entity, array(
@@ -267,7 +241,7 @@ class PersonController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($entity);
             $em->flush();
-            if ($pToMarry) {
+            if ($personToMarry) {
                 $url = $this->generateUrl('marry_both', array(
                     'p1' => $personToMarry->getId(),
                     'p2' => $entity->getId(),
@@ -282,22 +256,18 @@ class PersonController extends Controller
 
         return $this->render('@ancestors/person/create.html.twig', array(
             'form' => $form->createView(),
-            'pToMarry' => isset($personToMarry) ? $personToMarry : null,
+            'personToMarry' => isset($personToMarry) ? $personToMarry : null,
         ));
     }
 
     /**
      * @Route("/createFrom/{p1}/{p2}", name="create_person_from_parents")
      */
-    public function createFromParentsAction(Request $request, $p1, $p2)
+    public function createFromParentsAction(Request $request, Person $p1, Person $p2)
     {
         $entity = new Person;
-        $em = $this->getDoctrine()->getManager();
-        $person1 = $em->getRepository('AppBundle:Person')->findOneById($p1);
-        $person2 = $em->getRepository('AppBundle:Person')->findOneById($p2);
         if (!$person1 || !$person2) {
-            // Should do error handling
-            //exit(dump($person1, $person2));
+            throw $this->createNotFoundException('label.parents.not.found');
         }
         if ($person1->getFemale() && !$person2->getFemale()) {
             $entity->setMother($person1);
@@ -341,25 +311,7 @@ class PersonController extends Controller
         $result = '';
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $qb = $em->createQueryBuilder();
-            $qb->select('p')
-               ->from('AppBundle:Person', 'p');
-            if ($entity->getFamilyname()) {
-                $qb->andWhere('p.familyname LIKE :familyname')
-                   ->setParameter('familyname', '%' . $entity->getFamilyname() . '%');
-            }
-            if ($entity->getFirstname()) {
-                $qb->andWhere('p.firstname LIKE :firstname')
-                   ->setParameter('firstname', '%' . $entity->getFirstname() . '%');
-            }
-            if ($entity->getBirthdate()) {
-                $qb->andWhere('p.birthdate = :birthdate')
-                   ->setParameter('birthdate', $entity->getBirthdate());
-            }
-            $qb->orderBy('p.birthdate', 'ASC');
-            
-            $result = $qb->getQuery()->getResult();
+            $result = $this->getDoctrine()->getManager()->getRepository('AppBundle:Person')->findPersonFromPartialInfo($entity);
         }
 
         return $this->render('@ancestors/person/find.html.twig', array(
@@ -473,23 +425,26 @@ class PersonController extends Controller
     /**
      * @Route("/editMarriage/{p1}/{p2}", name="edit_marriage")
      */
-    public function editMarriageAction(Request $request, $p1, $p2)
+    public function editMarriageAction(Request $request, Person $person1, Person $person2)
     {
         $em = $this->getDoctrine()->getManager();
-
-        $entity = $this->selectMarriage($p1, $p2);
+        if ($person1 && $person2) {
+            $entity = $em->getRepository('AppBundle:PersonMarryPerson')
+                ->findMarriageBetween($person1, $person2);
+        } else {
+            throw $this->createNotFoundException('label.marriage.not.found');
+        }
 
         $form = $this->createForm(PersonMarryPersonType::class, $entity, array(
             'action' => $this->generateUrl('edit_marriage', array(
-                'p1' => $p1,
-                'p2' => $p2,
+                'p1' => $person1->getId(),
+                'p2' => $person2->getId(),
             )),
             'method' => 'POST',
         ));
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
             return $this->redirect($this->generateUrl('show_person', array(
@@ -506,49 +461,21 @@ class PersonController extends Controller
     /**
      * @Route("/deleteMarriage/{p1}/{p2}", name="delete_marriage")
      */
-    public function deleteMarriageAction($p1, $p2)
+    public function deleteMarriageAction(Person $person1, Person $person2)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $this->selectMarriage($p1, $p2);
+        if ($person1 && $person2) {
+            $entity = $em->getRepository('AppBundle:PersonMarryPerson')
+                ->findMarriageBetween($person1, $person2);
+            $em->remove($entity);
+            $em->flush();
 
-        $em->remove($entity);
-        $em->flush();
-
-        return $this->redirect($this->generateUrl('show_person', array(
-            'id' => $p1,
-        )));
-    }
-
-    private function selectMarriage($p1, $p2)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $person1 = $em->getRepository('AppBundle:Person')->findOneById($p1);
-        $person2 = $em->getRepository('AppBundle:Person')->findOneById($p2);
-        if (!$person1 || !$person2) {
-            // Should do error handling
-            //exit(dump($person1, $person2));
-        }
-        if ($person1->getFemale() && !$person2->getFemale()) {
-            $wife = $person1;
-            $husband = $person2;
-        } else if (!$person1->getFemale() && $person2->getFemale()) {
-            $wife = $person2;
-            $husband = $person1;
+            return $this->redirect($this->generateUrl('show_person', array(
+                'id' => $p1,
+            )));
         } else {
-            // Should do handling of same sex marriage
+            throw $this->createNotFoundException('label.marriage.not.found');
         }
-
-        $qb = $em->createQueryBuilder();
-        $qb->select('p')
-           ->from('AppBundle:PersonMarryPerson', 'p')
-           ->where('p.husband = :husband')
-           ->setParameter('husband', $husband)
-           ->andWhere('p.wife = :wife')
-           ->setParameter('wife', $wife)
-           ->setMaxResults(1);
-
-        return $qb->getQuery()->getResult()[0];
     }
 }
