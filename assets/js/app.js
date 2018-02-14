@@ -12,6 +12,9 @@ $(document).ready(function() {
     $(document).foundation();
 });
 
+var _ = require('lodash');
+import * as d3 from 'd3';
+window.d3 = d3;
 import dTree from 'd3-dtree';
 
 window.dTree = dTree;
