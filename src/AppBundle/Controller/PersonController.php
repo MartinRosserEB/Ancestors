@@ -149,7 +149,7 @@ class PersonController extends Controller
     /**
      * @Route("/create/{personToMarry}", defaults = {"personToMarry" = null}, name="create_person")
      */
-    public function createAction(Request $request, Person $personToMarry)
+    public function createAction(Request $request, Person $personToMarry = null)
     {
         $entity = new Person;
 
