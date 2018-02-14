@@ -8,10 +8,12 @@ import Foundation from 'foundation-sites';
 // the line below
 //import './lib/foundation-explicit-pieces';
 
+$(document).ready(function() {
+    $(document).foundation();
+});
+
 import dTree from 'd3-dtree';
 
 window.dTree = dTree;
 
 require('../scss/app.scss');
-
-$(document).foundation();
