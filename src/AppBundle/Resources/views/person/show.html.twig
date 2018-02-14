@@ -30,7 +30,7 @@
             {% endif %}
             {% if marriagesWithKids is not null %}{% for marriageWithKids in marriagesWithKids %}
             <div class="row">
-                <div class="small-3 large-2 columns">{% trans %}label.person.marriedTo{% endtrans %}{% if is_granted('ROLE_EDIT') %} (<a href="{{ path("edit_marriage", {'p1': person.id, 'p2': marriageWithKids.person.id}) }}">{% trans %}label.edit{% endtrans %}</a> / <a href="{{ path("delete_marriage", {'p1': person.id, 'p2': marriageWithKids.person.id}) }}">{% trans %}label.marriage.delete{% endtrans %}</a>){% endif %}:</div>
+                <div class="small-3 large-2 columns">{% trans %}label.person.marriedTo{% endtrans %}{% if is_granted('ROLE_EDIT') %} (<a href="{{ path("edit_marriage", {'person1': person.id, 'person2': marriageWithKids.person.id}) }}">{% trans %}label.edit{% endtrans %}</a> / <a href="{{ path("delete_marriage", {'p1': person.id, 'p2': marriageWithKids.person.id}) }}">{% trans %}label.marriage.delete{% endtrans %}</a>){% endif %}:</div>
                 <div class="small-9 large-10 columns"><a href="{{ path("show_person", {'id': marriageWithKids.person.id }) }}">{{ marriageWithKids.person.getFullName() }}</a></div>
                 {% for kid in marriageWithKids.kids -%}
                     {% if loop.index == 1 -%}</div><div class="row"><div class="small-3 large-2 columns">{% trans %}label.person.kid{% endtrans %}:</div>
@@ -42,7 +42,7 @@
             {% endfor %}{% endif %}
             {% if marriagesWithKids is not null and is_granted('ROLE_EDIT') %}{% for marriage in marriagesWithKids %}
             <div class="row">
-                <a href="{{ path("create_person_from_parents", {"p1": person.getId(), "p2": marriage.person.getId()}) }}">+ ({{ marriage.person.getFullName() }})</a>
+                <a href="{{ path("create_person_from_parents", {"person1": person.getId(), "person2": marriage.person.getId()}) }}">+ ({{ marriage.person.getFullName() }})</a>
             </div>
             {% endfor %}{% endif %}
             {% if person.birthdate is not null %}

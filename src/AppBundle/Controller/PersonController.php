@@ -35,7 +35,7 @@ class PersonController extends Controller
     public function showAction(Person $person, PrepareRelations $prepareRelations)
     {
         $marriagesWithKids = $prepareRelations->getMarriagesWithKidsFor($person);
-
+dump($marriagesWithKids);
         return $this->render('@ancestors/person/show.html.twig', array(
             'person' => $person,
             'marriagesWithKids' => $marriagesWithKids,

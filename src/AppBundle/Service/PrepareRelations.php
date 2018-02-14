@@ -46,6 +46,13 @@ class PrepareRelations {
                 }
             }
         }
+        $kidsWithSingleParent = $this->em->getRepository('AppBundle:Person')->findKidsWithSingleParent($person);
+        if (count($kidsWithSingleParent) > 0) {
+            $marriagesWithKids[] = array(
+                'person' => null,
+                'kids' => $kidsWithSingleParent,
+            );
+        }
 
         return $marriagesWithKids;
     }

@@ -18,6 +18,22 @@ class PersonRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findKidsWithSingleParent(Person $person)
+    {
+        $qb = $this->createQueryBuilder('p');
+        if ($person->getFemale()) {
+            $qb->where('p.mother = :person')
+                ->andWhere($qb->expr()->isNull('p.father'));
+        } else {
+            $qb->where('p.father = :person')
+                ->andWhere($qb->expr()->isNull('p.mother'));
+        }
+        $qb->orderBy('p.birthdate', 'ASC')
+            ->setParameter('person', $person);
+dump($qb->getQuery(), $qb->getQuery()->getResult());
+        return $qb->getQuery()->getResult();
+    }
+
     public function findOldestPerson()
     {
         $qb = $this->createQueryBuilder('p');
