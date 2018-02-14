@@ -6,11 +6,8 @@
     "webpack-notifier": "^1.5.1"
   },
   "dependencies": {
-    "d3": "~4",
     "d3-dtree": "~2",
-    "foundation": "^4.2.1-1",
     "foundation-sites": "^6.4.4-rc1",
-    "lodash": "~4",
-    "select2": "^4.0.6-rc.1"
+    "motion-ui": "^1.2.3"
   }
 }
