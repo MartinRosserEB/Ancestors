@@ -321,6 +321,7 @@ class PersonController extends Controller
      */
     public function editMarriageAction(Request $request, Person $person1, Person $person2)
     {
+        $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('AppBundle:PersonMarryPerson')
             ->findMarriageBetween($person1, $person2);
         if (!$entity) {
