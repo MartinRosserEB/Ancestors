@@ -126,6 +126,10 @@
                 <source>label.generic.comment</source>
                 <target>Kommentar</target>
             </trans-unit>
+            <trans-unit id="label.insert.common.child">
+                <source>label.insert.common.child</source>
+                <target>gemeinsames Kind erfassen</target>
+            </trans-unit>
             <trans-unit id="label.person.create">
                 <source>label.person.create</source>
                 <target>Daten speichern</target>

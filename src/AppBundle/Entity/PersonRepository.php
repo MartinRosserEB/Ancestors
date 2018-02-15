@@ -30,7 +30,7 @@ class PersonRepository extends EntityRepository
         }
         $qb->orderBy('p.birthdate', 'ASC')
             ->setParameter('person', $person);
-dump($qb->getQuery(), $qb->getQuery()->getResult());
+
         return $qb->getQuery()->getResult();
     }
 
