@@ -40,6 +40,11 @@ class PersonType extends AbstractType
                 'required' => false,
                 'label' => 'label.generic.birthdate',
             ))
+            ->add('deathdate', DateType::class, array(
+                'label' => 'label.generic.deathdate',
+                'widget' => 'single_text',
+                'required' => false,
+            ))
             ->add('father', EntityType::class, array(
                 'label' => 'label.generic.father',
                 'class' => 'AppBundle:Person',
@@ -79,11 +84,6 @@ class PersonType extends AbstractType
                     return $person->getFullName();
                 },
                 'required' => false
-            ))
-            ->add('deathdate', DateType::class, array(
-                'label' => 'label.generic.deathdate',
-                'widget' => 'single_text',
-                'required' => false,
             ))
             ->add('comment', TextareaType::class, array(
                 'label' => 'label.generic.comment',
