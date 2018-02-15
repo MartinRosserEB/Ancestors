@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Vorfahren{% endblock %}</title>
+        <title>{% block title %}{% trans %}label.ancestors{% endtrans %}{% endblock %}</title>
         {% block stylesheetsDefault %}
         <link rel="stylesheet" href="{{ asset('assets/app.css') }}" />
         {% endblock %}
@@ -15,12 +15,13 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        <nav class="menu-centered">
-            <ul class="dropdown menu" data-dropdown-menu data-close-on-click-inside="false">
+        <div class="top-bar">
+          <div class="top-bar-left">
+            <ul class="vertical medium-horizontal menu" data-responsive-menu="accordion medium-dropdown">
                 {% if is_granted('ROLE_CREATE') %}
                 <li>
                     <a href="#">{% trans %}label.nav.edit{% endtrans %}</a>
-                    <ul class="menu">
+                    <ul class="menu vertical">
                         <li><a href="{{ path('create_person') }}">{% trans %}label.nav.create{% endtrans %}</a></li>
                         {% if is_granted('ROLE_EDIT') %}
                         <li><a href="{{ path('marry') }}">{% trans %}label.nav.marry{% endtrans %}</a></li>
@@ -30,14 +31,15 @@
                 {% endif %}
                 <li>
                     <a href="#">{% trans %}label.nav.show{% endtrans %}</a>
-                    <ul class="menu">
+                    <ul class="menu vertical">
                         <li><a href="{{ path('show_oldest_person') }}">{% trans %}label.nav.browseFromFirst{% endtrans %}</a></li>
                         <li><a href="{{ path('find_person') }}">{% trans %}label.nav.person.find{% endtrans %}</a></li>
                         <li><a href="{{ path('link_persons_form') }}">{% trans %}label.nav.person.link{% endtrans %}</a></li>
                     </ul>
                 </li>
             </ul>
-        </nav>
+          </div>
+        </div>
         {% block body %}{% endblock %}
         {% block javascriptsBodyDefault %}
         {% endblock %}

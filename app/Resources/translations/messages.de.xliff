@@ -2,6 +2,10 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
+            <trans-unit id="label.ancestors">
+                <source>label.ancestors</source>
+                <target>Vorfahren</target>
+            </trans-unit>
             <trans-unit id="label.nav.edit">
                 <source>label.nav.edit</source>
                 <target>Stammbaum bearbeiten</target>
@@ -145,6 +149,10 @@
             <trans-unit id="label.person.edit">
                 <source>label.person.edit</source>
                 <target>bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="label.search">
+                <source>label.search</source>
+                <target>Suchen</target>
             </trans-unit>
         </body>
     </file>
