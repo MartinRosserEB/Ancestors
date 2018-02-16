@@ -62,6 +62,10 @@
                 <source>label.person.kid</source>
                 <target>Kind</target>
             </trans-unit>
+            <trans-unit id="label.familyTree">
+                <source>label.familyTree</source>
+                <target>Stammbaum</target>
+            </trans-unit>
             <trans-unit id="label.generic.action">
                 <source>label.generic.action</source>
                 <target>Aktion</target>

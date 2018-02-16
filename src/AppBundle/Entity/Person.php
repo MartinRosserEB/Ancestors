@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -58,6 +59,11 @@ class Person
     private $deathdate;
 
     /**
+     * @ORM\ManyToMany(targetEntity="FamilyTree", mappedBy="persons")
+     */
+    private $familyTrees;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
@@ -76,6 +82,7 @@ class Person
         {
             $this->birthdate = $birthdate;
         }
+        $this->familyTrees = new ArrayCollection();
     }
 
     /**
@@ -311,5 +318,21 @@ class Person
     public function getFemale()
     {
         return $this->female;
+    }
+
+    
+    public function getFamilyTrees()
+    {
+        return $this->familyTrees;
+    }
+
+    public function addFamilyTree(FamilyTree $familyTree)
+    {
+        $this->familyTrees->add($familyTree);
+    }
+
+    public function setFamilyTrees(array $familyTrees)
+    {
+        $this->familyTrees = new ArrayCollection($familyTrees);
     }
 }

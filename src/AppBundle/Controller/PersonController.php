@@ -69,6 +69,10 @@ class PersonController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            foreach ($person->getFamilyTrees() as $familyTree) {
+                $familyTree->addPerson($person);
+                $em->persist($familyTree);
+            }
             $em->persist($person);
             $em->flush();
             return $this->redirect($this->generateUrl('show_person', array('id' => $person->getId())));

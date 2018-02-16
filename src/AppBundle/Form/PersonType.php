@@ -45,6 +45,12 @@ class PersonType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ))
+            ->add('familyTrees', EntityType::class, array(
+                'label' => 'label.familyTree',
+                'multiple' => true,
+                'class' => 'AppBundle:FamilyTree',
+                'required' => true,
+            ))
             ->add('father', EntityType::class, array(
                 'label' => 'label.generic.father',
                 'class' => 'AppBundle:Person',
