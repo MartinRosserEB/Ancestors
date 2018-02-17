@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\FamilyTreeRepository")
  * @ORM\Table(name="family_tree")
  */
 class FamilyTree
@@ -28,6 +28,11 @@ class FamilyTree
      * @ORM\JoinTable(name="persons_familyTrees")
      */
     private $persons;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AccessRight", mappedBy="familyTree")
+     */
+    private $accessRights;
 
     public function __construct()
     {

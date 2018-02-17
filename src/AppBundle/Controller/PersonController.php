@@ -185,6 +185,7 @@ class PersonController extends Controller
         $form = $this->createForm(PersonType::class, $entity, array(
             'action' => $actionUrl,
             'method' => 'POST',
+            'user' => $this->getUser(),
         ));
 
         $form->handleRequest($request);

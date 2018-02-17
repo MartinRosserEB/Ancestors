@@ -2,11 +2,12 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\FamilyTreeRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -24,6 +25,8 @@ class PersonType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $user = $options['user'];
+
         $builder
             ->add('familyname', TextType::class, array(
                 'label' => 'label.generic.familyname',
@@ -50,6 +53,9 @@ class PersonType extends AbstractType
                 'multiple' => true,
                 'class' => 'AppBundle:FamilyTree',
                 'required' => true,
+                'query_builder' => function(FamilyTreeRepository $er) use ($user) {
+                    return $er->queryFamilyTreesWithReadAccessFor($user);
+                }
             ))
             ->add('father', EntityType::class, array(
                 'label' => 'label.generic.father',
@@ -102,5 +108,10 @@ class PersonType extends AbstractType
                 ),
             ))
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired('user');
     }
 }
