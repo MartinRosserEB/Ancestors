@@ -11,6 +11,7 @@ use AppBundle\Form\PersonType;
 use AppBundle\Form\FindPersonType;
 use AppBundle\Form\LinkTwoPersonsType;
 use AppBundle\Form\PersonMarryPersonType;
+use AppBundle\Service\CheckAccess;
 use AppBundle\Service\FindLink;
 use AppBundle\Service\PreFill;
 use AppBundle\Service\PrepareRelations;
@@ -32,8 +33,12 @@ class PersonController extends Controller
     /**
      * @Route("/{id}/show/", name="show_person")
      */
-    public function showAction(Person $person, PrepareRelations $prepareRelations)
+    public function showAction(Person $person, PrepareRelations $prepareRelations, CheckAccess $checkAccess)
     {
+        if (!$checkAccess->checkReadAccess($person)) {
+            throw new AccessDeniedHttpException();
+        }
+
         $marriagesWithKids = $prepareRelations->getMarriagesWithKidsFor($person);
 
         return $this->render('@ancestors/person/show.html.twig', array(
@@ -45,11 +50,14 @@ class PersonController extends Controller
     /**
      * @Route("/show/oldest", name="show_oldest_person")
      */
-    public function showOldestAction()
+    public function showOldestAction(CheckAccess $checkAccess)
     {
         $oldestPerson = $this->getDoctrine()->getManager()->getRepository('AppBundle:Person')->findOldestPerson();
 
         if ($oldestPerson) {
+            if (!$checkAccess->checkReadAccess($oldestPerson)) {
+                throw new AccessDeniedHttpException();
+            }
             return $this->redirectToRoute('show_person', array('id' => $oldestPerson->getId()));
         } else {
             throw new AccessDeniedHttpException();
@@ -59,8 +67,12 @@ class PersonController extends Controller
     /**
      * @Route("/{id}/edit/", name="edit_person")
      */
-    public function editAction(Request $request, Person $person)
+    public function editAction(Request $request, Person $person, CheckAccess $checkAccess)
     {
+        if (!$checkAccess->checkWriteAccess($person)) {
+            throw new AccessDeniedHttpException();
+        }
+
         $form = $this->createForm(PersonType::class, $person, array(
             'action' => $this->generateUrl('edit_person', array('id' => $person->getId())),
             'method' => 'POST',
@@ -105,8 +117,12 @@ class PersonController extends Controller
     /**
      * @Route("/link/{person1}/{person2}", name="link_persons")
      */
-    public function link(Person $person1, Person $person2, FindLink $linkFinder)
+    public function link(Person $person1, Person $person2, FindLink $linkFinder, CheckAccess $checkAccess)
     {
+        if (!$checkAccess->checkReadAccess($person1) || !$checkAccess->checkReadAccess($person2)) {
+            throw new AccessDeniedHttpException();
+        }
+
         $curNode = $linkFinder->getLinkBetweenTwoPersons($person1, $person2);
         if (!$curNode) {
             throw $this->createNotFoundException('label.link.between.persons.not.found');
@@ -298,8 +314,12 @@ class PersonController extends Controller
     /**
      * @Route("/marryBoth/{person1}/{person2}", name="marry_both")
      */
-    public function marryBothAction(Request $request, $person1, $person2, PreFill $preFill)
+    public function marryBothAction(Request $request, $person1, $person2, PreFill $preFill, CheckAccess $checkAccess)
     {
+        if (!$checkAccess->checkWriteAccess($person1) || !$checkAccess->checkWriteAccess($person2)) {
+            throw new AccessDeniedHttpException();
+        }
+
         $entity = $preFill->setWifeAndHusband($person1, $person2);
 
         $form = $this->createForm(PersonMarryPersonType::class, $entity, array(
@@ -323,8 +343,12 @@ class PersonController extends Controller
     /**
      * @Route("/editMarriage/{person1}/{person2}", name="edit_marriage")
      */
-    public function editMarriageAction(Request $request, Person $person1, Person $person2)
+    public function editMarriageAction(Request $request, Person $person1, Person $person2, CheckAccess $checkAccess)
     {
+        if (!$checkAccess->checkWriteAccess($person1) || !$checkAccess->checkWriteAccess($person2)) {
+            throw new AccessDeniedHttpException();
+        }
+
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('AppBundle:PersonMarryPerson')
             ->findMarriageBetween($person1, $person2);
@@ -358,8 +382,12 @@ class PersonController extends Controller
     /**
      * @Route("/deleteMarriage/{p1}/{p2}", name="delete_marriage")
      */
-    public function deleteMarriageAction(Person $person1, Person $person2)
+    public function deleteMarriageAction(Person $person1, Person $person2, CheckAccess $checkAccess)
     {
+        if (!$checkAccess->checkDeleteAccess($person1) || !$checkAccess->checkDeleteAccess($person2)) {
+            throw new AccessDeniedHttpException();
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('AppBundle:PersonMarryPerson')

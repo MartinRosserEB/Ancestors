@@ -10,6 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AccessRight
 {
+    const READ = 4;
+    const WRITE = 2;
+    const DELETE = 1;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
