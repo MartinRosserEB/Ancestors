@@ -1,0 +1,6 @@
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% block fos_user_content %}
+    {{ include('@FOSUser/Security/login_content.html.twig') }}
+    <a href="{{ path('fos_user_registration_register') }}">{% trans %}label.register{% endtrans %}</a> | <a href="{{ path('fos_user_resetting_request') }}">{% trans %}label.reset.password{% endtrans %}</a>
+{% endblock fos_user_content %}

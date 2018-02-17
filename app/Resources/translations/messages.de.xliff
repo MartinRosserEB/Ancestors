@@ -6,6 +6,10 @@
                 <source>label.ancestors</source>
                 <target>Vorfahren</target>
             </trans-unit>
+            <trans-unit id="label.back.to.login">
+                <source>label.back.to.login</source>
+                <target>Zurück zum Anmeldeformular</target>
+            </trans-unit>
             <trans-unit id="label.nav.edit">
                 <source>label.nav.edit</source>
                 <target>Stammbaum bearbeiten</target>
@@ -157,6 +161,14 @@
             <trans-unit id="label.person.edit">
                 <source>label.person.edit</source>
                 <target>bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="label.register">
+                <source>label.register</source>
+                <target>Registrieren</target>
+            </trans-unit>
+            <trans-unit id="label.reset.password">
+                <source>label.reset.password</source>
+                <target>Passwort neu setzen</target>
             </trans-unit>
             <trans-unit id="label.search">
                 <source>label.search</source>

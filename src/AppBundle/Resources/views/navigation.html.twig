@@ -1,0 +1,25 @@
+        <div class="top-bar">
+          <div class="top-bar-left">
+            <ul class="vertical medium-horizontal menu" data-responsive-menu="accordion medium-dropdown">
+                {% if is_granted('ROLE_CREATE') %}
+                <li>
+                    <a href="#">{% trans %}label.nav.edit{% endtrans %}</a>
+                    <ul class="menu vertical">
+                        <li><a href="{{ path('create_person') }}">{% trans %}label.nav.create{% endtrans %}</a></li>
+                        {% if is_granted('ROLE_EDIT') %}
+                        <li><a href="{{ path('marry') }}">{% trans %}label.nav.marry{% endtrans %}</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                {% endif %}
+                <li>
+                    <a href="#">{% trans %}label.nav.show{% endtrans %}</a>
+                    <ul class="menu vertical">
+                        <li><a href="{{ path('show_oldest_person') }}">{% trans %}label.nav.browseFromFirst{% endtrans %}</a></li>
+                        <li><a href="{{ path('find_person') }}">{% trans %}label.nav.person.find{% endtrans %}</a></li>
+                        <li><a href="{{ path('link_persons_form') }}">{% trans %}label.nav.person.link{% endtrans %}</a></li>
+                    </ul>
+                </li>
+            </ul>
+          </div>
+        </div>
