@@ -76,6 +76,7 @@ class PersonController extends Controller
         $form = $this->createForm(PersonType::class, $person, array(
             'action' => $this->generateUrl('edit_person', array('id' => $person->getId())),
             'method' => 'POST',
+            'user' => $this->getUser(),
         ));
 
         $form->handleRequest($request);
@@ -145,6 +146,7 @@ class PersonController extends Controller
         $form = $this->createForm(LinkTwoPersonsType::class, $entity, array(
             'action' => $this->generateUrl('link_persons_form'),
             'method' => 'POST',
+            'user' => $this->getUser(),
         ));
 
         $form->handleRequest($request);
@@ -221,6 +223,7 @@ class PersonController extends Controller
         $form = $this->createForm(PersonType::class, $entity, array(
             'action' => $this->generateUrl('create_person'),
             'method' => 'POST',
+            'user' => $this->getUser(),
         ));
 
         $form->handleRequest($request);
@@ -245,6 +248,7 @@ class PersonController extends Controller
         $form = $this->createForm(FindPersonType::class, $entity, array(
             'action' => $this->generateUrl('find_person'),
             'method' => 'POST',
+            'user' => $this->getUser(),
         ));
 
         $result = '';
@@ -269,6 +273,7 @@ class PersonController extends Controller
         $form = $this->createForm(PersonMarryPersonType::class, $entity, array(
             'action' => $this->generateUrl('marry'),
             'method' => 'POST',
+            'user' => $this->getUser(),
         ));
 
         $form->handleRequest($request);
@@ -295,6 +300,7 @@ class PersonController extends Controller
         $form = $this->createForm(PersonMarryPersonType::class, $entity, array(
             'action' => $this->generateUrl('marry'),
             'method' => 'POST',
+            'user' => $this->getUser(),
         ));
 
         $form->handleRequest($request);
@@ -326,6 +332,7 @@ class PersonController extends Controller
         $form = $this->createForm(PersonMarryPersonType::class, $entity, array(
             'action' => $this->generateUrl('marry'),
             'method' => 'POST',
+            'user' => $this->getUser(),
         ));
 
         $form->handleRequest($request);
@@ -363,6 +370,7 @@ class PersonController extends Controller
                 'person2' => $person2->getId(),
             )),
             'method' => 'POST',
+            'user' => $this->getUser(),
         ));
 
         $form->handleRequest($request);
