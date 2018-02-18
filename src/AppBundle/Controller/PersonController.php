@@ -248,13 +248,12 @@ class PersonController extends Controller
         $form = $this->createForm(FindPersonType::class, $entity, array(
             'action' => $this->generateUrl('find_person'),
             'method' => 'POST',
-            'user' => $this->getUser(),
         ));
 
         $result = '';
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $result = $this->getDoctrine()->getManager()->getRepository('AppBundle:Person')->findPersonFromPartialInfo($entity);
+            $result = $this->getDoctrine()->getManager()->getRepository('AppBundle:Person')->findPersonFromPartialInfoWithReadAccessCheck($entity, $this->getUser());
         }
 
         return $this->render('@ancestors/person/find.html.twig', array(

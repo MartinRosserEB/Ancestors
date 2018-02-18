@@ -46,9 +46,10 @@ class PersonRepository extends EntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findPersonFromPartialInfo(Person $entity)
+    public function findPersonFromPartialInfoWithReadAccessCheck(Person $entity, User $user)
     {
         $qb = $this->createQueryBuilder('p');
+        $this->addAccessCheck($qb, $user);
         if ($entity->getFamilyname()) {
             $qb->andWhere('p.familyname LIKE :familyname')
                ->setParameter('familyname', '%' . $entity->getFamilyname() . '%');
@@ -68,24 +69,24 @@ class PersonRepository extends EntityRepository
 
     public function queryMalePersonsWithReadAccessFor(User $user)
     {
-        $qb = $this->createQueryBuilder('u');
+        $qb = $this->createQueryBuilder('p');
 
         $this->addAccessCheck($qb, $user);
 
-        $qb->andWhere('u.female = 0')
-            ->orderBy('u.firstname', 'ASC');
+        $qb->andWhere('p.female = 0')
+            ->orderBy('p.firstname', 'ASC');
 
         return $qb;
     }
 
     public function queryFemalePersonsWithReadAccessFor(User $user)
     {
-        $qb = $this->createQueryBuilder('u');
+        $qb = $this->createQueryBuilder('p');
 
         $this->addAccessCheck($qb, $user);
 
-        $qb->andWhere('u.female = 1')
-            ->orderBy('u.firstname', 'ASC');
+        $qb->andWhere('p.female = 1')
+            ->orderBy('p.firstname', 'ASC');
 
         return $qb;
     }
@@ -96,17 +97,17 @@ class PersonRepository extends EntityRepository
 
         $this->addAccessCheck($qb, $user);
 
-        $qb->orderBy('u.firstname', 'ASC');
+        $qb->orderBy('p.firstname', 'ASC');
 
         return $qb;
     }
 
     private function addAccessCheck($qb, User $user)
     {
-        $qb->leftJoin('u.familyTrees', 'uft')
-            ->leftJoin('uft.accessRights', 'uftar')
-            ->andWhere('uftar.user = :user')
-            ->andWhere('BIT_AND(uftar.accessType, '.AccessRight::READ.') > 0')
+        $qb->leftJoin('p.familyTrees', 'pft')
+            ->leftJoin('pft.accessRights', 'pftar')
+            ->andWhere('pftar.user = :user')
+            ->andWhere('BIT_AND(pftar.accessType, '.AccessRight::READ.') > 0')
             ->setParameter('user', $user);
     }
 }
