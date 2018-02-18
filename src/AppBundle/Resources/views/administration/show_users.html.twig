@@ -1,0 +1,32 @@
+{% extends '@ancestors/base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+            <table>
+                <thead>
+                    <th>{% trans %}label.admin.username{% endtrans %}</th>
+                    <th>{% trans %}label.admin.email{% endtrans %}</th>
+                    <th>{% trans %}label.admin.familyTrees{% endtrans %}</th>
+                    <th>{% trans %}label.admin.enabled{% endtrans %}</th>
+                    <th>{% trans %}label.admin.roles{% endtrans %}</th>
+                    <th>{% trans %}label.admin.last.login{% endtrans %}</th>
+                    <th>{% trans %}label.admin.action{% endtrans %}</th>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.familyTrees|join(', ') }}</td>
+                        <td>{{ user.enabled }}</td>
+                        <td>{{ user.roles|join(', ') }}</td>
+                        <td>{{ user.lastLogin|date('d.m.Y, G:i') }}</td>
+                        <td><a href="{{ path('edit_user', {id: user.id}) }}">{% trans %}label.admin.user.edit{% endtrans %}</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

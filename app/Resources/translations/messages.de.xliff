@@ -6,9 +6,45 @@
                 <source>label.ancestors</source>
                 <target>Vorfahren</target>
             </trans-unit>
+            <trans-unit id="label.admin.username">
+                <source>label.admin.username</source>
+                <target>Benutzername</target>
+            </trans-unit>
+            <trans-unit id="label.admin.user.edit">
+                <source>label.admin.user.edit</source>
+                <target>Bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="label.admin.email">
+                <source>label.admin.email</source>
+                <target>E-Mail</target>
+            </trans-unit>
+            <trans-unit id="label.admin.familyTrees">
+                <source>label.admin.familyTrees</source>
+                <target>Zugriff auf Stammbäume</target>
+            </trans-unit>
+            <trans-unit id="label.admin.roles">
+                <source>label.admin.roles</source>
+                <target>Rollen</target>
+            </trans-unit>
+            <trans-unit id="label.admin.enabled">
+                <source>label.admin.enabled</source>
+                <target>Aktiviert</target>
+            </trans-unit>
+            <trans-unit id="label.admin.last.login">
+                <source>label.admin.last.login</source>
+                <target>Letzter Login</target>
+            </trans-unit>
+            <trans-unit id="label.admin.action">
+                <source>label.admin.action</source>
+                <target>Aktion</target>
+            </trans-unit>
             <trans-unit id="label.back.to.login">
                 <source>label.back.to.login</source>
                 <target>Zurück zum Anmeldeformular</target>
+            </trans-unit>
+            <trans-unit id="label.nav.administration">
+                <source>label.nav.administration</source>
+                <target>Administration</target>
             </trans-unit>
             <trans-unit id="label.nav.edit">
                 <source>label.nav.edit</source>
@@ -37,6 +73,10 @@
             <trans-unit id="label.nav.show">
                 <source>label.nav.show</source>
                 <target>Stammbaum anzeigen</target>
+            </trans-unit>
+            <trans-unit id="label.nav.show.users">
+                <source>label.nav.show.users</source>
+                <target>Benutzer anzeigen</target>
             </trans-unit>
             <trans-unit id="label.nav.person.show">
                 <source>label.nav.person.show</source>
@@ -173,6 +213,10 @@
             <trans-unit id="label.search">
                 <source>label.search</source>
                 <target>Suchen</target>
+            </trans-unit>
+            <trans-unit id="label.user.not.found">
+                <source>label.user.not.found</source>
+                <target>Der Benutzer wurde nicht gefunden.</target>
             </trans-unit>
         </body>
     </file>

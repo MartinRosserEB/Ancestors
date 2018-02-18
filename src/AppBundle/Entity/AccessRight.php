@@ -31,7 +31,7 @@ class AccessRight
     private $familyTree;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="accessRights")
      */
     private $user;
 

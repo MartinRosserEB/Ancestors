@@ -1,0 +1,30 @@
+{% extends '@ancestors/base.html.twig' %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+            <table>
+                <tr>
+                    <th>{% trans %}label.admin.username{% endtrans %}</th>
+                    <td>{{ user.username }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans %}label.admin.email{% endtrans %}</th>
+                    <td>{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans %}label.admin.familyTrees{% endtrans %}</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>{% trans %}label.admin.enabled{% endtrans %}</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>{% trans %}label.admin.roles{% endtrans %}</th>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+{% endblock %}
