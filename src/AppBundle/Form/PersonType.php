@@ -6,10 +6,7 @@ use AppBundle\Entity\FamilyTreeRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -60,13 +57,8 @@ class PersonType extends AbstractType
             ->add('father', EntityType::class, array(
                 'label' => 'label.generic.father',
                 'class' => 'AppBundle:Person',
-                'query_builder' => function(EntityRepository $repository) {
-                    $qb = $repository->createQueryBuilder('u');
-                    return $qb
-                        ->where($qb->expr()->eq('u.female', ':female'))
-                        ->setParameter('female', 'true')
-                        ->orderBy('u.firstname', 'ASC')
-                    ;
+                'query_builder' => function(EntityRepository $er) use ($user) {
+                    return $er->queryMalePersonsWithReadAccessFor($user);
                 },
                 'choice_label' => function($person) {
                     return $person->getFullName();
@@ -76,13 +68,8 @@ class PersonType extends AbstractType
             ->add('mother', EntityType::class, array(
                 'label' => 'label.generic.mother',
                 'class' => 'AppBundle:Person',
-                'query_builder' => function(EntityRepository $repository) {
-                    $qb = $repository->createQueryBuilder('u');
-                    return $qb
-                        ->where($qb->expr()->neq('u.female', ':female'))
-                        ->setParameter('female', 'true')
-                        ->orderBy('u.firstname', 'ASC')
-                    ;
+                'query_builder' => function(EntityRepository $er) use ($user) {
+                    return $er->queryFemalePersonsWithReadAccessFor($user);
                 },
                 'choice_label' => function($person) {
                     return $person->getFullName();
@@ -92,6 +79,9 @@ class PersonType extends AbstractType
             ->add('twin', EntityType::class, array(
                 'label' => 'label.generic.twin',
                 'class' => 'AppBundle:Person',
+                'query_builder' => function(EntityRepository $er) use ($user) {
+                    return $er->queryPersonsWithReadAccessFor($user);
+                },
                 'choice_label' => function($person) {
                     return $person->getFullName();
                 },

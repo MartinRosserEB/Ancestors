@@ -65,4 +65,48 @@ class PersonRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function queryMalePersonsWithReadAccessFor(User $user)
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        $this->addAccessCheck($qb, $user);
+
+        $qb->andWhere('u.female = 0')
+            ->orderBy('u.firstname', 'ASC');
+
+        return $qb;
+    }
+
+    public function queryFemalePersonsWithReadAccessFor(User $user)
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        $this->addAccessCheck($qb, $user);
+
+        $qb->andWhere('u.female = 1')
+            ->orderBy('u.firstname', 'ASC');
+
+        return $qb;
+    }
+
+    public function queryPersonsWithReadAccessFor(User $user)
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        $this->addAccessCheck($qb, $user);
+
+        $qb->orderBy('u.firstname', 'ASC');
+
+        return $qb;
+    }
+
+    private function addAccessCheck($qb, User $user)
+    {
+        $qb->leftJoin('u.familyTrees', 'uft')
+            ->leftJoin('uft.accessRights', 'uftar')
+            ->andWhere('uftar.user = :user')
+            ->andWhere('BIT_AND(uftar.accessType, '.AccessRight::READ.') > 0')
+            ->setParameter('user', $user);
+    }
 }
