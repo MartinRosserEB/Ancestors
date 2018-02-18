@@ -93,7 +93,7 @@ class PersonRepository extends EntityRepository
 
     public function queryPersonsWithReadAccessFor(User $user)
     {
-        $qb = $this->createQueryBuilder('u');
+        $qb = $this->createQueryBuilder('p');
 
         $this->addAccessCheck($qb, $user);
 
