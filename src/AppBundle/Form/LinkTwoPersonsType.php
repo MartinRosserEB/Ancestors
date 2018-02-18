@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LinkTwoPersonsType extends AbstractType
 {
@@ -20,6 +21,9 @@ class LinkTwoPersonsType extends AbstractType
                 'label' => 'label.generic.person',
                 'class' => 'AppBundle:Person',
                 'required' => false,
+                'query_builder' => function(EntityRepository $er) use ($user) {
+                    return $er->queryPersonsWithReadAccessFor($user);
+                },
                 'choice_label' => function($person) {
                     return $person->getFullName();
                 }
@@ -28,6 +32,9 @@ class LinkTwoPersonsType extends AbstractType
                 'label' => 'label.generic.person',
                 'class' => 'AppBundle:Person',
                 'required' => false,
+                'query_builder' => function(EntityRepository $er) use ($user) {
+                    return $er->queryPersonsWithReadAccessFor($user);
+                },
                 'choice_label' => function($person) {
                     return $person->getFullName();
                 }
@@ -39,5 +46,10 @@ class LinkTwoPersonsType extends AbstractType
                 ),
             ))
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired('user');
     }
 }
