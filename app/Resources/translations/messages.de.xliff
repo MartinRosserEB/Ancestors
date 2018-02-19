@@ -214,6 +214,10 @@
                 <source>label.search</source>
                 <target>Suchen</target>
             </trans-unit>
+            <trans-unit id="label.submit">
+                <source>label.submit</source>
+                <target>Speichern</target>
+            </trans-unit>
             <trans-unit id="label.user.not.found">
                 <source>label.user.not.found</source>
                 <target>Der Benutzer wurde nicht gefunden.</target>

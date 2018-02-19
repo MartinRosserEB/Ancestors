@@ -3,28 +3,30 @@
 {% block body %}
     <div id="wrapper">
         <div id="container">
+            {{ form_start(form) }}
             <table>
                 <tr>
+                    <th>{% trans %}label.admin.enabled{% endtrans %}</th>
+                    <td>{{ form_widget(form.enabled) }}</td>
+                </tr>
+                <tr>
                     <th>{% trans %}label.admin.username{% endtrans %}</th>
-                    <td>{{ user.username }}</td>
+                    <td>{{ form_widget(form.username) }}</td>
                 </tr>
                 <tr>
                     <th>{% trans %}label.admin.email{% endtrans %}</th>
-                    <td>{{ user.email }}</td>
+                    <td>{{ form_widget(form.email) }}</td>
                 </tr>
                 <tr>
                     <th>{% trans %}label.admin.familyTrees{% endtrans %}</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>{% trans %}label.admin.enabled{% endtrans %}</th>
-                    <td></td>
+                    <td>{{ form_widget(form.familyTrees) }}</td>
                 </tr>
                 <tr>
                     <th>{% trans %}label.admin.roles{% endtrans %}</th>
-                    <td></td>
+                    <td>{{ form_widget(form.roles) }}</td>
                 </tr>
             </table>
+            {{ form_end(form) }}
         </div>
     </div>
 {% endblock %}

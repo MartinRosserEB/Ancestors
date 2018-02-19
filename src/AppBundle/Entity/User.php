@@ -51,6 +51,11 @@ class User extends BaseUser
         $this->accessRights->add($accessRight);
     }
 
+    public function removeAccessRight($accessRight)
+    {
+        $this->accessRights->remove($accessRight);
+    }
+
     public function populateFamilyTrees()
     {
         $this->familyTrees = array();

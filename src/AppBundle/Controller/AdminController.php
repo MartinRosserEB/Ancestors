@@ -2,8 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\Admin;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -35,21 +37,22 @@ class AdminController extends Controller
     /**
      * @Route("/edit/user/{id}", name="edit_user")
      */
-    public function editUserAction(AuthorizationCheckerInterface $authChecker, $id)
+    public function editUserAction(Request $request, AuthorizationCheckerInterface $authChecker, Admin $adminSrv, $id)
     {
         if (false === $authChecker->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
 
-        $userManager = $this->container->get('fos_user.user_manager');
-        $user = $userManager->findUserBy(array('id'=>$id));
-        if (!$user) {
-            throw $this->createNotFoundException('label.user.not.found');
+        $data = $adminSrv->prepareForm($id);
+        $form = $data['form'];
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $adminSrv->persistForm($data);
         }
-        $user->populateFamilyTrees();
 
         return $this->render('@ancestors/administration/edit_user.html.twig', array(
-            'user' => $user,
+            'form' => $form->createView(),
         ));
     }
 }
