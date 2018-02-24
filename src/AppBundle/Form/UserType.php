@@ -41,10 +41,10 @@ class UserType extends AbstractType
                 'mapped' => true,
                 'attr' => array('class' => 'select2'),
             ))
-            ->add('familyTrees', EntityType::class, array(
-                'label' => 'label.admin.familyTrees',
+            ->add('accessRights', EntityType::class, array(
+                'label' => 'label.admin.accessRights',
                 'multiple' => true,
-                'class' => 'AppBundle:FamilyTree',
+                'class' => 'AppBundle:AccessRight',
             ))
             ->add('save', SubmitType::class, array(
                 'label' => 'label.submit',
