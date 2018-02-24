@@ -11,3 +11,7 @@ services:
 
     AppBundle\:
         resource: '../../src/AppBundle/*'
+
+    AppBundle\Service\Admin:
+        arguments: 
+            $roles: '%security.role_hierarchy.roles%'

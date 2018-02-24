@@ -7,6 +7,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,6 +20,8 @@ class UserType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $roles = $options['roles'];
+
         $builder
             ->add('enabled', CheckboxType::class, array(
                 'label' => 'label.admin.enabled',
@@ -29,7 +32,15 @@ class UserType extends AbstractType
             ->add('email', TextType::class, array(
                 'label' => 'label.admin.email',
             ))
-            ->add('roles')
+            ->add('roles', ChoiceType::class, array(
+                'choices' => $roles,
+                'label' => 'label.admin.roles',
+                'expanded' => false,
+                'required' => false,
+                'multiple' => true,
+                'mapped' => true,
+                'attr' => array('class' => 'select2'),
+            ))
             ->add('familyTrees', EntityType::class, array(
                 'label' => 'label.admin.familyTrees',
                 'multiple' => true,
@@ -51,6 +62,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data-class' => User::class,
+            'roles' => array(),
         ));
     }
 

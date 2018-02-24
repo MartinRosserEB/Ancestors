@@ -14,12 +14,14 @@ class Admin {
     private $userManager;
     private $formFactory;
     private $urlGenerator;
+    private $roles;
 
-    public function __construct(UserManagerInterface $userManager, FormFactoryInterface $formFactory, UrlGeneratorInterface $urlGenerator)
+    public function __construct(UserManagerInterface $userManager, FormFactoryInterface $formFactory, UrlGeneratorInterface $urlGenerator, $roles)
     {
         $this->userManager = $userManager;
         $this->formFactory = $formFactory;
         $this->urlGenerator = $urlGenerator;
+        $this->roles = $roles;
     }
 
     public function prepareForm($id)
@@ -35,6 +37,7 @@ class Admin {
                 'id' => $user->getId()
             )),
             'method' => 'POST',
+            'roles' => array_flip(array_keys($this->roles)),
         ));
 
         return array(
