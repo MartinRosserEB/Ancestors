@@ -10,6 +10,10 @@
                 <source>label.admin.accessRights</source>
                 <target>Zugriffsrechte</target>
             </trans-unit>
+            <trans-unit id="label.admin.accessType">
+                <source>label.admin.accessType</source>
+                <target>Zugriffsart</target>
+            </trans-unit>
             <trans-unit id="label.admin.username">
                 <source>label.admin.username</source>
                 <target>Benutzername</target>
@@ -41,6 +45,18 @@
             <trans-unit id="label.admin.action">
                 <source>label.admin.action</source>
                 <target>Aktion</target>
+            </trans-unit>
+            <trans-unit id="label.admin.delete">
+                <source>label.admin.delete</source>
+                <target>Löschen</target>
+            </trans-unit>
+            <trans-unit id="label.admin.write">
+                <source>label.admin.write</source>
+                <target>Schreiben</target>
+            </trans-unit>
+            <trans-unit id="label.admin.read">
+                <source>label.admin.read</source>
+                <target>Lesen</target>
             </trans-unit>
             <trans-unit id="label.back.to.login">
                 <source>label.back.to.login</source>

@@ -30,10 +30,21 @@ class User extends BaseUser
      */
     private $familyTrees;
 
+    private $name;
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
     public function __construct()
     {
         parent::__construct();
-        // your own logic
     }
 
     public function getAccessRights()
