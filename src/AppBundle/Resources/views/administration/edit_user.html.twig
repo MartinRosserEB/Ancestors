@@ -1,5 +1,15 @@
 {% extends '@ancestors/base.html.twig' %}
 
+{% form_theme form _self %}
+
+{% block _accessRights_entry_widget %}
+    <tr>
+        <td style="display:none;">{{ form_row(form.user) }}</td>
+        <td>{{ form_row(form.familyTree) }}</td>
+        <td>{{ form_row(form.accessType) }}</td>
+    </tr>
+{% endblock %}
+
 {% block body %}
     <div id="wrapper">
         <div id="container">
@@ -39,37 +49,35 @@
             {{ form_end(form) }}
         </div>
     </div>
-{% endblock %}
 
-{% block script %}
 <script>
 var $collectionHolder;
 
 // setup an "add a tag" link
-var $addAccessRightLink = $('<a href="#" class="add_accessRight_link">{% trans %}label.accessright.add{% endtrans %}</a>');
-var $newLinkLi = $('<li></li>').append($addAccessRightLink);
+var $addAccessRightLink = $('<a href="#" class="add_accessRight_link">{% trans %}label.accessRight.add{% endtrans %}</a>');
+var $newLinkTr = $('<tr></tr>').append($addAccessRightLink);
 
-jQuery(document).ready(function() {
+$(document).ready(function() {
     // Get the ul that holds the collection of tags
     $collectionHolder = $('table.accessRights');
 
     // add the "add a tag" anchor and li to the tags ul
-    $collectionHolder.append($newLinkLi);
+    $collectionHolder.append($newLinkTr);
 
     // count the current form inputs we have (e.g. 2), use that as the new
     // index when inserting a new item (e.g. 2)
-    $collectionHolder.data('index', $collectionHolder.find(':input').length);
+    $collectionHolder.data('index', $collectionHolder.find('tr').length);
 
-    $addTagLink.on('click', function(e) {
+    $addAccessRightLink.on('click', function(e) {
         // prevent the link from creating a "#" on the URL
         e.preventDefault();
 
         // add a new tag form (see next code block)
-        addAccessRightForm($collectionHolder, $newLinkLi);
+        addAccessRightForm($collectionHolder, $newLinkTr);
     });
 });
 
-function addAccessRightForm($collectionHolder, $newLinkLi) {
+function addAccessRightForm($collectionHolder, $newLinkTr) {
     // Get the data-prototype explained earlier
     var prototype = $collectionHolder.data('prototype');
 
@@ -90,8 +98,8 @@ function addAccessRightForm($collectionHolder, $newLinkLi) {
     $collectionHolder.data('index', index + 1);
 
     // Display the form in the page in an li, before the "Add a tag" link li
-    var $newFormLi = $('<li></li>').append(newForm);
-    $newLinkLi.before($newFormLi);
+    var $newFormTr = $('<tr></tr>').append(newForm);
+    $newLinkTr.before($newFormTr);
 }
 </script>
 {% endblock %}
