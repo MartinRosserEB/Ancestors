@@ -6,6 +6,10 @@
                 <source>label.accessRight.add</source>
                 <target>Zugriffsrecht hinzufügen</target>
             </trans-unit>
+            <trans-unit id="label.accessRight.delete">
+                <source>label.accessRight.delete</source>
+                <target>Zugriffsrecht entfernen</target>
+            </trans-unit>
             <trans-unit id="label.ancestors">
                 <source>label.ancestors</source>
                 <target>Vorfahren</target>

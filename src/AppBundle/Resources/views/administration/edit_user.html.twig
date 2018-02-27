@@ -61,6 +61,10 @@ $(document).ready(function() {
     // Get the ul that holds the collection of tags
     $collectionHolder = $('table.accessRights');
 
+    // add a delete link to all of the existing tag form li elements
+    $collectionHolder.find('tr').each(function() {
+        addTagFormDeleteLink($(this));
+    });
     // add the "add a tag" anchor and li to the tags ul
     $collectionHolder.append($newLinkTr);
 
@@ -100,6 +104,19 @@ function addAccessRightForm($collectionHolder, $newLinkTr) {
     // Display the form in the page in an li, before the "Add a tag" link li
     var $newFormTr = $('<tr></tr>').append(newForm);
     $newLinkTr.before($newFormTr);
+}
+
+function addTagFormDeleteLink($tagFormTr) {
+    var $removeFormA = $('<a href="#">{% trans %}label.accessRight.delete{% endtrans %}</a>');
+    $tagFormTr.append($removeFormA);
+
+    $removeFormA.on('click', function(e) {
+        // prevent the link from creating a "#" on the URL
+        e.preventDefault();
+
+        // remove the li for the tag form
+        $tagFormTr.remove();
+    });
 }
 </script>
 {% endblock %}

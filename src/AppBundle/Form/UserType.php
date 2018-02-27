@@ -47,6 +47,8 @@ class UserType extends AbstractType
                     'label' => 'label.admin.accessRights',
                 ),
                 'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
             ))
             ->add('save', SubmitType::class, array(
                 'label' => 'label.submit',

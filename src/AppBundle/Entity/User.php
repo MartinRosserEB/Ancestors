@@ -20,7 +20,7 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="AccessRight", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="AccessRight", mappedBy="user", cascade="persist")
      */
     private $accessRights;
 
@@ -59,12 +59,14 @@ class User extends BaseUser
 
     public function addAccessRight($accessRight)
     {
+        $accessRight->setUser($this);
+
         $this->accessRights->add($accessRight);
     }
 
     public function removeAccessRight($accessRight)
     {
-        $this->accessRights->remove($accessRight);
+        $this->accessRights->removeElement($accessRight);
     }
 
     public function populateFamilyTrees()
