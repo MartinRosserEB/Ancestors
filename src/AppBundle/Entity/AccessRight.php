@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 class AccessRight
 {
     const READ = 4;
-    const WRITE = 2;
-    const DELETE = 1;
+    const WRITE = 6; // 4 + 2: Only combined access rights supported
+    const DELETE = 7; // 4 + 2 + 1
 
     /**
      * @ORM\Id
