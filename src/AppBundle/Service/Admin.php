@@ -21,7 +21,7 @@ class Admin {
         $this->userManager = $userManager;
         $this->formFactory = $formFactory;
         $this->urlGenerator = $urlGenerator;
-        $this->roles = $roles;
+        $this->roles = array_keys($roles);
     }
 
     public function prepareForm($id)
@@ -37,7 +37,7 @@ class Admin {
                 'id' => $user->getId()
             )),
             'method' => 'POST',
-            'roles' => array_flip(array_keys($this->roles)),
+            'roles' => array_combine($this->roles, $this->roles),
         ));
 
         return array(
