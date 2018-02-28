@@ -12,6 +12,7 @@
 {% endblock %}
 
 {% block body %}
+
     <div id="wrapper">
         <div id="container">
             {{ form_start(form) }}
@@ -31,14 +32,24 @@
                 <tr>
                     <th>{% trans %}label.admin.accessRights{% endtrans %}</th>
                     <td>
-                        <table class="accessRights" data-prototype="{{ form_widget(form.accessRights.vars.prototype)|e('html_attr') }}">
-                            {% for accessRight in form.accessRights -%}
-                            <tr>
-                                <td style="display: none;">{{ form_row(accessRight.user) }}</td>
-                                <td>{{ form_row(accessRight.familyTree) }}</td>
-                                <td>{{ form_row(accessRight.accessType) }}</td>
-                            </tr>
-                            {%- endfor %}
+                        <table class="fixedTableLayout">
+                            <thead>
+                                <tr>
+                                    <td style="display: none;">{% trans %}label.admin.username{% endtrans %}</td>
+                                    <td>{% trans %}label.familyTree{% endtrans %}</td>
+                                    <td>{% trans %}label.admin.accessType{% endtrans %}</td>
+                                    <td>{% trans %}label.admin.action{% endtrans %}</td>
+                                </tr>
+                            </thead>
+                            <tbody class="accessRights" data-prototype="{{ form_widget(form.accessRights.vars.prototype)|e('html_attr') }}">
+                                {% for accessRight in form.accessRights -%}
+                                <tr>
+                                    <td style="display: none;">{{ form_widget(accessRight.user) }}</td>
+                                    <td>{{ form_widget(accessRight.familyTree) }}</td>
+                                    <td>{{ form_widget(accessRight.accessType) }}</td>
+                                </tr>
+                                {%- endfor %}
+                            </tbody>
                         </table>
                     </td>
                 </tr>
@@ -55,18 +66,17 @@
 var $collectionHolder;
 
 // setup an "add a tag" link
-var $addAccessRightLink = $('<a href="#" class="add_accessRight_link">{% trans %}label.accessRight.add{% endtrans %}</a>');
+var $addAccessRightLink = $('<td colspan="3"><a href="#" class="add_accessRight_link">{% trans %}label.accessRight.add{% endtrans %}</a></td>');
 var $newLinkTr = $('<tr></tr>').append($addAccessRightLink);
 
-$(document).ready(function() {
-    // Get the ul that holds the collection of tags
-    $collectionHolder = $('table.accessRights');
+$(function() {
+    $collectionHolder = $('tbody.accessRights');
 
-    // add a delete link to all of the existing tag form li elements
+    // add a delete link to all of the existing form elements
     $collectionHolder.find('tr').each(function() {
         addTagFormDeleteLink($(this));
     });
-    // add the "add a tag" anchor and li to the tags ul
+    // add the "add" anchor
     $collectionHolder.append($newLinkTr);
 
     // count the current form inputs we have (e.g. 2), use that as the new
@@ -77,7 +87,7 @@ $(document).ready(function() {
         // prevent the link from creating a "#" on the URL
         e.preventDefault();
 
-        // add a new tag form (see next code block)
+        // add a new form (see next code block)
         addAccessRightForm($collectionHolder, $newLinkTr);
     });
 });
@@ -101,20 +111,20 @@ function addAccessRightForm($collectionHolder, $newLinkTr) {
     // increase the index with one for the next item
     $collectionHolder.data('index', index + 1);
 
-    // Display the form in the page in an li, before the "Add a tag" link li
+    // Display the form in the page, before the "Add" link
     var $newFormTr = $('<tr></tr>').append(newForm);
     $newLinkTr.before($newFormTr);
 }
 
 function addTagFormDeleteLink($tagFormTr) {
-    var $removeFormA = $('<a href="#">{% trans %}label.accessRight.delete{% endtrans %}</a>');
+    var $removeFormA = $('<td><a href="#">{% trans %}label.accessRight.delete{% endtrans %}</a></td>');
     $tagFormTr.append($removeFormA);
 
     $removeFormA.on('click', function(e) {
         // prevent the link from creating a "#" on the URL
         e.preventDefault();
 
-        // remove the tr for the tag form
+        // remove the tr for the form
         $tagFormTr.remove();
     });
 }

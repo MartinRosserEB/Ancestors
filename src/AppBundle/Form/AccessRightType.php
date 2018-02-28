@@ -36,15 +36,12 @@ class AccessRightType extends AbstractType
         $builder
             ->add('user', EntityType::class, array(
                 'class' => User::class,
-                'label' => 'label.admin.username',
             ))
             ->add('familyTree', EntityType::class, array(
-                'label' => 'label.familyTree',
                 'class' => FamilyTree::class,
             ))
             ->add('accessType', ChoiceType::class, array(
                 'choices' => $accessTypes,
-                'label' => 'label.admin.accessType',
                 'expanded' => false,
                 'required' => true,
                 'multiple' => false,
