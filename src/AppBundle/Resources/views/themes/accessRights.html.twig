@@ -1,12 +1,15 @@
 {% extends '@ancestors/base.html.twig' %}
 
-{% macro accessRightsPrototype(arForm) %}
-    <td style="display:none;">{{ form_widget(arForm.user) }}</td>
-    <td>{{ form_widget(arForm.familyTree) }}</td>
-    <td>{{ form_widget(arForm.accessType) }}</td>
-{% endmacro %}
+{# Following does not work yet: https://symfony.com/doc/3.4/form/form_customization.html#how-to-customize-a-collection-prototype #}
+{% form_theme form _self %}
 
-{% import _self as arProto %}
+{% block _accessRights_entry_widget %}
+    <tr>
+        <td style="display:none;">{{ form_row(form.user) }}</td>
+        <td>{{ form_row(form.familyTree) }}</td>
+        <td>{{ form_row(form.accessType) }}</td>
+    </tr>
+{% endblock %}
 
 {% block body %}
 
@@ -38,7 +41,7 @@
                                     <td>{% trans %}label.admin.action{% endtrans %}</td>
                                 </tr>
                             </thead>
-                            <tbody class="accessRights" data-prototype="{{ arProto.accessRightsPrototype(form.accessRights.vars.prototype)|e('html_attr') }}">
+                            <tbody class="accessRights" data-prototype="{{ form_widget(form.accessRights.vars.prototype)|e('html_attr') }}">
                                 {% for accessRight in form.accessRights -%}
                                 <tr>
                                     <td style="display: none;">{{ form_widget(accessRight.user) }}</td>
@@ -71,7 +74,7 @@ $(function() {
 
     // add a delete link to all of the existing form elements
     $collectionHolder.find('tr').each(function() {
-        addFormDeleteLink($(this));
+        addTagFormDeleteLink($(this));
     });
     // add the "add" anchor
     $collectionHolder.append($newLinkTr);
@@ -111,20 +114,18 @@ function addAccessRightForm($collectionHolder, $newLinkTr) {
     // Display the form in the page, before the "Add" link
     var $newFormTr = $('<tr></tr>').append(newForm);
     $newLinkTr.before($newFormTr);
-    $newFormTr.find("select").select2();
-    addFormDeleteLink($newFormTr);
 }
 
-function addFormDeleteLink($FormTr) {
+function addTagFormDeleteLink($tagFormTr) {
     var $removeFormA = $('<td><a href="#">{% trans %}label.accessRight.delete{% endtrans %}</a></td>');
-    $FormTr.append($removeFormA);
+    $tagFormTr.append($removeFormA);
 
     $removeFormA.on('click', function(e) {
         // prevent the link from creating a "#" on the URL
         e.preventDefault();
 
         // remove the tr for the form
-        $FormTr.remove();
+        $tagFormTr.remove();
     });
 }
 </script>
