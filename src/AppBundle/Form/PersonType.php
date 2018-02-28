@@ -9,13 +9,21 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class PersonType extends AbstractType
 {
+    private $trans;
+
+    public function __construct(TranslatorInterface $trans)
+    {
+        $this->trans = $trans;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -31,9 +39,14 @@ class PersonType extends AbstractType
             ->add('firstname', TextType::class, array(
                 'label' => 'label.generic.firstname',
             ))
-            ->add('female', CheckboxType::class, array(
-                'label' => 'label.generic.female',
-                'required' => false,
+            ->add('female', ChoiceType::class, array(
+                'label' => 'label.generic.sex',
+                'required' => true,
+                'choices' => array(
+                    $this->trans->trans('label.generic.male') => false,
+                    $this->trans->trans('label.generic.female') => true,
+                ),
+                'placeholder' => 'label.generic.choose.option',
             ))
             ->add('birthdate', DateType::class, array(
                 'widget' => 'single_text',

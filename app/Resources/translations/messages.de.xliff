@@ -142,6 +142,10 @@
                 <source>label.generic.action</source>
                 <target>Aktion</target>
             </trans-unit>
+            <trans-unit id="label.generic.choose.option">
+                <source>label.generic.choose.option</source>
+                <target>Bitte wählen</target>
+            </trans-unit>
             <trans-unit id="label.generic.person">
                 <source>label.generic.person</source>
                 <target>Person</target>
@@ -177,6 +181,14 @@
             <trans-unit id="label.generic.mother">
                 <source>label.generic.mother</source>
                 <target>Mutter</target>
+            </trans-unit>
+            <trans-unit id="label.generic.sex">
+                <source>label.generic.sex</source>
+                <target>Geschlecht</target>
+            </trans-unit>
+            <trans-unit id="label.generic.male">
+                <source>label.generic.male</source>
+                <target>männlich</target>
             </trans-unit>
             <trans-unit id="label.generic.husband">
                 <source>label.generic.husband</source>

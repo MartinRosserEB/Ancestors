@@ -31,7 +31,7 @@ class Person
     /**
      * @ORM\Column(type="boolean")
      */
-    private $female = false;
+    private $female;
 
     /**
      * @ORM\Column(type="date", nullable=true)
