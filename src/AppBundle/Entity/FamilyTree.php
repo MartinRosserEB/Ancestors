@@ -24,7 +24,7 @@ class FamilyTree
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Person", inversedBy="familyTrees", cascade="persist")
+     * @ORM\ManyToMany(targetEntity="Person", inversedBy="familyTrees")
      * @ORM\JoinTable(name="persons_familyTrees")
      */
     private $persons;
@@ -57,6 +57,13 @@ class FamilyTree
     public function addPerson(Person $person)
     {
         $this->persons->add($person);
+    }
+
+    public function removePerson(Person $person)
+    {
+        if ($this->persons->contains($person)) {
+            $this->persons->removeElement($person);
+        }
     }
 
     public function __toString()

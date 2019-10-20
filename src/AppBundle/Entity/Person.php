@@ -59,7 +59,7 @@ class Person
     private $deathdate;
 
     /**
-     * @ORM\ManyToMany(targetEntity="FamilyTree", mappedBy="persons")
+     * @ORM\ManyToMany(targetEntity="FamilyTree", mappedBy="persons", cascade={"all"})
      */
     private $familyTrees;
 
@@ -329,10 +329,20 @@ class Person
     public function addFamilyTree(FamilyTree $familyTree)
     {
         $this->familyTrees->add($familyTree);
+        $familyTree->addPerson($this);
+    }
+
+    public function removeFamilyTree(FamilyTree $familyTree)
+    {
+        $this->familyTrees->remove($familyTree);
+        $familyTree->removePerson($this);
     }
 
     public function setFamilyTrees(array $familyTrees)
     {
         $this->familyTrees = new ArrayCollection($familyTrees);
+        foreach ($familyTrees as $familyTree) {
+            $familyTree->addPerson($this);
+        }
     }
 }

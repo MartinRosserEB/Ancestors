@@ -15,6 +15,7 @@ use AppBundle\Service\CheckAccess;
 use AppBundle\Service\FindLink;
 use AppBundle\Service\PreFill;
 use AppBundle\Service\PrepareRelations;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
@@ -73,6 +74,10 @@ class PersonController extends Controller
             throw new AccessDeniedHttpException();
         }
 
+        $prevFamilyTrees = new ArrayCollection();
+        foreach ($person->getFamilyTrees() as $prevFamTree) {
+            $prevFamilyTrees->add($prevFamTree);
+        }
         $form = $this->createForm(PersonType::class, $person, array(
             'action' => $this->generateUrl('edit_person', array('id' => $person->getId())),
             'method' => 'POST',
@@ -83,8 +88,14 @@ class PersonController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             foreach ($person->getFamilyTrees() as $familyTree) {
-                $familyTree->addPerson($person);
-                $em->persist($familyTree);
+                if (!$prevFamilyTrees->contains($familyTree)) {
+                    $familyTree->addPerson($person);
+                }
+            }
+            foreach ($prevFamilyTrees as $familyTree) {
+                if (!$person->getFamilyTrees()->contains($familyTree)) {
+                    $familyTree->removePerson($person);
+                }
             }
             $em->persist($person);
             $em->flush();
@@ -193,6 +204,9 @@ class PersonController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($entity);
+            foreach ($entity->getFamilyTrees() as $familyTree) {
+                $familyTree->addPerson($entity);
+            }
             $em->flush();
             if ($personToMarry) {
                 $url = $this->generateUrl('marry_both', array(
