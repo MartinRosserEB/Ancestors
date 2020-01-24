@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Person;
 use AppBundle\Entity\PersonMarryPerson;
@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 /**
  * @Route("/person")
  */
-class PersonController extends Controller
+class PersonController extends AbstractController
 {
     /**
      * @Route("/", name="person_index")

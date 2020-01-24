@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Service\Admin;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * @Route("/admin")
  */
-class AdminController extends Controller
+class AdminController extends AbstractController
 {   
     /**
      * @Route("/show/users", name="show_users")
